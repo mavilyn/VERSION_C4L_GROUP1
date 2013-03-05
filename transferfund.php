@@ -3,53 +3,72 @@
 		session_start();
 	
 		if(isset($_POST['Submit'])){
-			$connGuest = oci_connect("guestbank", "kayato1"); //cnnect with the guestbank
 			
-				$sql="select * from accountconnected where preferredname = '".$_POST["accountconnected"]."'"; //get the row with the same preferred name
+			
+				/*$sql="select otheraccountnum from accountconnected where accountnum = '".$_POST["accountconnected"]."'"; //get the row with the same accountnum
 				$stmt = oci_parse($connGuest, $sql);
-						oci_execute($stmt, OCI_DEFAULT);
+						oci_execute($stmt);
 						
-						while ($row = oci_fetch_array($stmt, OCI_BOTH)) {
-							$otheraccountnum=$row[1];	//
-						}
+						$row = oci_fetch_array($stmt, OCI_BOTH);
+						$otheraccountnum=$row;	*/
+						
 				
 				
-					$connGuest = oci_connect("mainbank", "kayato1");
+					$conn = oci_connect("mainbank", "kayato1"); //connect with mainbank database
 					$clientaccount = $_SESSION['client']->get_accountnum();
-					$clientquery = 'SELECT * FROM account where accountnum = $clientaccount';
-					$st = oci_parse($connGuest, $clientquery);
-						oci_execute($st);
+					$clientquery = 'SELECT * FROM account where accountnum = :accountnum';
+					$st = oci_parse($conn, $clientquery);
+					oci_bind_by_name($st, ':accountnum', $clientaccount);
+					oci_execute($st, OCI_DEFAULT);
 						
-						while ($row = oci_fetch_array($stmt, OCI_BOTH)) {
+						while ($row = oci_fetch_array($st, OCI_BOTH)) {
 							$clientbalance=$row[2];	//
 						}
 					
-				
-					$query =  'SELECT * FROM account where accountnum = $otheraccountnum';
-					$compiled = oci_parse($connGuest, $query);
-					oci_bind_by_name($compiled, ':accountnum', $otheraccountnum );
-					oci_execute($compiled);
-					$result = oci_fetch_array($compiled, OCI_RETURN_NULLS+OCI_ASSOC);
-					foreach ($result as $num){
-						if($clientbalance < $_POST['amount']){
-							echo "Account balance not enough!";
+					
+					$amount = $_POST["amount"];
+					
+						if($clientbalance < $amount){
+							echo "You do not have enough balance in your account.";
 						}
 						else{
-						$newclientbalance = $clientbalance - $_POST['amount'];
+						
 	
-						$query = 'UPDATE account set balance = balance + $_POST["amount"] where accountnum = :otheraccountnum';
-						$stid = oci_parse($connGuest, $query);
-						oci_bind_by_name($stid, ':otheraccountnum', $otheraccountnum);
-						$stid = oci_parse($connGuest, $query);
-						$query = 'UPDATE account set balance = :newclientbalance where accountnum = :clientaccount';
-						oci_bind_by_name($stid, ':newclientbalanace', $newclientbalance);
-						oci_bind_by_name($stid, ':bal', $clientaccount);
-						oci_execute($stid);
+						$query = 'UPDATE account set balance = balance + :pera where accountnum = :accountnum';
+						$setbal = oci_parse($conn, $query);
+						oci_bind_by_name($setbal, ':pera', $amount);
+						oci_bind_by_name($setbal, ':accountnum', $_POST["accountconnected"]);
+						oci_execute($setbal);
+						
+						$query = 'UPDATE account set balance = balance - :pera where accountnum = :accountnum';
+						$setbal = oci_parse($conn, $query);
+						oci_bind_by_name($setbal, ':pera', $amount);
+						oci_bind_by_name($setbal, ':accountnum', $clientaccount);
+						oci_execute($setbal);
+						
+						
+						echo "Successfully transferred P".$amount." to account number: " .$_POST["accountconnected"];
+					
+			
+						
+						$query = 'INSERT into trans values(:accountnum, trans_seq.nextval,'."'online'".', SYSDATE, :transactioncost, '."'credit'".')';
+						$trans = oci_parse($conn, $query);
+						oci_bind_by_name($trans, ':accountnum', $clientaccount);
+						oci_bind_by_name($trans, ':transactioncost', $_POST['amount']);
+						oci_execute($trans);
+						oci_close($conn);
+						
+						$connGuest = oci_connect("guestbank", "kayato1");
+						$query = 'INSERT into transact_transfer values(:accountnum,:otheracc,'."'online'".',SYSDATE, :transactioncost,'."'credit'".',trans_seq.nextval  )';
+						$trans = oci_parse($connGuest, $query);
+						oci_bind_by_name($trans, ':accountnum', $clientaccount);
+						oci_bind_by_name($trans, ':otheracc', $_POST['accountconnected']);
+						oci_bind_by_name($trans, ':transactioncost', $_POST['amount']);
+						oci_execute($trans);
 						oci_close($connGuest);
 						
+						}
 						
-						}
-						}
 		}
 ?>		
 	
@@ -64,24 +83,26 @@
 		<?php
 				$conn = oci_connect("guestbank", "kayato1");
 				
-				$query = 'select preferredname from accountconnected';
+				$query = 'select otheraccountnum from accountconnected';
 				$stid = oci_parse($conn, $query);
 				oci_execute($stid);
 				
+				
+				
 			if($stid == NULL){
+				
 				echo "Execution Failed";
 			}
 			print 'Account Connected: <select name="accountconnected">';
-			while ($row = oci_fetch_array($stid, OCI_RETURN_NULLS+OCI_ASSOC)) {
+			while ($row = oci_fetch_array($stid, OCI_BOTH)) {
 				foreach ($row as $item) {
 					print'<option value="'.$item.'">'.$item; echo'</option>';
 			}
 			}		
 			print '</select><br/>';
-			oci_close($conn);
 			?> 
 			
-			Amount: <input type="text" name="amount" maxlength="10"/>
+			Amount: <input type="text" name="amount"/>
 			<input type="submit" name="Submit" value="Submit" />
 			</form>
 			<?php }else header('Location: login.php'); ?>

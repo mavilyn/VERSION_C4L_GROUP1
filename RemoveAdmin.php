@@ -1,12 +1,48 @@
 <?php
+		
   		if (isset($_POST['Submit'])) {
-				//$removeAdmin = $_POST['admin']; 
-					$connGuest = oci_connect("guestbank", "kayato1");
-					$stmt = oci_parse($connGuest,
-						'DELETE FROM admins WHERE empid = :removeAdmin');
-					//$stmt = oci_parse($connGuest, $sql);
-					oci_bind_by_name($stmt, ':removeAdmin', $_POST['admin']);
-					oci_execute($stmt);
+				$empid = $_POST['empid']; 
+				$connGuest = oci_connect("guestbank", "kayato1");
+						$stid = oci_parse($connGuest,
+								"SELECT COUNT(*) AS NUM_ROWS
+								FROM admins
+								WHERE empid = '".$_POST['empid']."'"
+							);
+							
+
+							oci_define_by_name($stid, 'NUM_ROWS', $num_rows);
+							oci_execute($stid);
+							oci_fetch($stid);
+							//$connMain = oci_connect("mainbank", "kayato1");
+								if($num_rows>0){
+									$sql="select * from admins where empid =".$empid;
+
+									$stmt = oci_parse($connGuest, $sql);
+									oci_execute($stmt, OCI_DEFAULT);
+
+									while ($row = oci_fetch_array($stmt, OCI_BOTH)) {
+										$username=$row[0];
+									}
+
+									$stmt2 = oci_parse($connGuest,
+										'DELETE FROM admins WHERE empid = :removeAdmin');
+									//$stmt = oci_parse($connGuest, $sql);
+									oci_bind_by_name($stmt2, ':removeAdmin', $_POST['empid']);
+									oci_execute($stmt2);
+									
+									$stmt3 = oci_parse($connGuest,
+										'DELETE FROM users WHERE username = :username');
+									//$stmt = oci_parse($connGuest, $sql);
+									oci_bind_by_name($stmt3, ':username', $username);
+									oci_execute($stmt3);
+									
+									oci_close($connGuest);
+									
+									echo"<script>alert('Administrator account has been successfully removed.');return false;</script>";
+								}
+								else{
+									echo "<script>alert('Employee number not found.');</script>";
+								}
 		}
 					
 					/*while ($row = oci_fetch_array($stmt, OCI_BOTH)) {
@@ -29,7 +65,7 @@
 	<body>
 		<form name = "removeAdmin_form" method ="post" action = "removeAdmin.php" onsubmit="return checkRemove();">
 			<?php
-				$conn = oci_connect("guestbank", "kayato1");
+				/*$conn = oci_connect("guestbank", "kayato1");
 
 				$query = 'select empid from admins';
 				
@@ -55,8 +91,9 @@
 					print'<option value="'.$item.'">'.$empname; echo'</option>';
 				}
 			}		
-			print '</select><br/>';
+			print '</select><br/>';*/
 			?>
+			Enter Employee ID <input type="text" name="empid"/> <br />
 			<input type="submit" name="Submit" value="Remove Administrator" />	
 		</form>
 	</body>

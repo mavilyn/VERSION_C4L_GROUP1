@@ -100,6 +100,12 @@ function checkEnroll(){
 						 }
 					    
 						if(month!=""&&day!=""&&year!=""){
+								if(isNaN(month)||isNaN(day)||isNaN(year)){
+									document.getElementById("birthErr").innerHTML = "Please verify your birthday.";
+									valid = false;
+								 }
+								 
+							else{
 								if(month==4||month==6||month==9||month==11){
 									if(day>30){			
 										//echo "Invalid date! Please enter your correct birth date.";
@@ -125,24 +131,25 @@ function checkEnroll(){
 								else{
 									document.getElementById("birthErr").innerHTML = "";
 								 }
+							}
 						}
 						
-						if (email==null || atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length){
+						if (email!="" && (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length)){
 						    document.getElementById("emailErr").innerHTML = "Please verify your email address.";
-									valid = false;	
+							valid = false;	
 				      	}
 						else{
 							document.getElementById("emailErr").innerHTML = "";
 						 }
 						 
-						 if(contact==""){
+						 /*if(contact==""){
 							document.getElementById("contactErr").innerHTML = "Please verify your contact number.";
 							valid = false;	
 						 }
 						 
 						 else{
 							document.getElementById("contactErr").innerHTML = "";
-						 }
+						 }*/
 						
 						if(mother==""){
 							document.getElementById("motherErr").innerHTML = "Please verify your mother's maiden name.";
@@ -159,16 +166,38 @@ function checkEnroll(){
 						}
 						
 						else{
-							document.getElementById("usernameErr").innerHTML = "";
+							//document.getElementById("usernameErr").innerHTML = "";
+							if(checkUsername(username)==false){
+								document.getElementById("usernameErr").innerHTML = "Username must not contain spaces.";
+								valid = false;
+							}
+							
+							else{
+								document.getElementById("usernameErr").innerHTML = "";
+							}
 						}
-						
+				
 						if(password==""){
 							document.getElementById("passwordErr").innerHTML = "Please verify your password.";
 							valid = false;
 						}
 						
 						else{
-							document.getElementById("passwordErr").innerHTML = "";
+							if(password.length<4){
+								document.getElementById("passwordErr").innerHTML = "Password length should be greater than 4 for your security.";
+								valid = false;
+							}
+							else{
+								document.getElementById("passwordErr").innerHTML = "";
+								if(confirmpassword!=password){
+									document.getElementById("confirmpasswordErr").innerHTML = "Please verify password confirmation.";
+									valid = false;
+								}
+								
+								else{
+										document.getElementById("confirmpasswordErr").innerHTML = "";
+								}
+							}
 						}
 						
 						
@@ -178,29 +207,31 @@ function checkEnroll(){
 						}
 						
 						else{
-							document.getElementById("answerErr").innerHTML = "";
-						}
-						
-						if(confirmpassword!=password){
-							document.getElementById("confirmpasswordErr").innerHTML = "Please verify password confirmation.";
-							valid = false;
-						}
-						
-						else{
-							document.getElementById("confirmpasswordErr").innerHTML = "";
-						}
-						
-						if(confirmanswer!=answer){
-							document.getElementById("confirmanswerErr").innerHTML = "Please verify answer confirmation.";
-							valid = false;
-						}
-						
-						else{
-							document.getElementById("confirmanswerErr").innerHTML = "";
+							if(answer.length<4){
+								document.getElementById("answerErr").innerHTML = "Answer length should be greater than 4 for your security.";
+								valid = false;
+							}
+							else{
+								if(confirmanswer!=answer){
+									document.getElementById("confirmanswerErr").innerHTML = "Please verify answer confirmation.";
+									valid = false;
+								}
+								
+								else{
+									document.getElementById("confirmanswerErr").innerHTML = "";
+								}
+								document.getElementById("answerErr").innerHTML = "";
+							}
 						}
 						
 						 if(valid == false){
 							return false;
+						}
+						else{
+								var confirmation = confirm('Are you sure you want to enroll in Guestbank Online Solutions?');
+								if(confirmation == false){
+									return false;
+								}
 						}
 						
 }
@@ -239,6 +270,12 @@ function checkEnroll(){
 						
 		if(valid==false){
 			return false;
+		}
+		else{
+			var confirmation = confirm('Are you sure you want to change your password?');
+				if(confirmation == false){
+					return false;
+				}
 		}
 	}
 	
@@ -297,7 +334,15 @@ function checkEnroll(){
 						}
 						
 						else{
-							document.getElementById("usernameErr").innerHTML = "";
+							//document.getElementById("usernameErr").innerHTML = "";
+							if(checkUsername(username)==false){
+								document.getElementById("usernameErr").innerHTML = "Username must not contain spaces.";
+								valid = false;
+							}
+							
+							else{
+								document.getElementById("usernameErr").innerHTML = "";
+							}
 						}
 						
 						if(password==""){
@@ -321,12 +366,18 @@ function checkEnroll(){
 						if(valid == false){
 							return false;
 						}
+						else{
+								var confirmation = confirm('Are you sure you want to add admin to Guestbank Online Solutions?');
+								if(confirmation == false){
+									return false;
+								}
+						}
 		}
 		
 		function checkRemove(){
 			var confirmRemove = confirm('Are you sure you want to remove administrator account? ');
 			if(confirmRemove == true){
-				alert('Administrator account has been successfully removed.');
+			
 				return true;
 			}
 			else{
@@ -350,3 +401,17 @@ function checkEnroll(){
 				}
 		}
 
+		function checkUsername(field){
+			    var counter = 0;
+			    var alphabet = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890";
+			    for(var i=0; i<field.length; i++){
+					for(var j=0; j<62; j++){
+						if(field.charAt(i)==alphabet.charAt(j)){
+							    counter++;
+						}
+					}
+				}
+				if(counter<field.length){
+					return false;
+				}
+		}

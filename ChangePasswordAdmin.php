@@ -2,7 +2,7 @@
 			include("class_lib.php");
 			session_start();
 			if(isset($_POST['Submit'])){
-				if($_SESSION['admin']->get_password() == $_POST['currentpassword']){
+				if($_SESSION['admin']->get_password() == md5(md5($_POST['currentpassword']))){
 						$connGuest = oci_connect("guestbank", "kayato1");
 						$stid3 = oci_parse($connGuest,
 						'UPDATE admins set password = :password where username = :username'
@@ -11,7 +11,9 @@
 						oci_bind_by_name($stid3, ':password', $_POST['newpassword']);
 						oci_execute($stid3);
 						echo '<script type=text/javascript>alert("Password changed.")</script>';
-						header("Location: logout_admin.php");
+						oci_close($connGuest);
+						$_SESSION['admin']->set_password(md5(md5($_POST['newpassword'])));
+						header("Location: admin_home.php");
 				}
 				else{
 					echo "Please enter your correct password.";
@@ -19,10 +21,10 @@
 			}
 			
 			
-	if(isset($_POST['logoutadmin'])){
-		unset($_SESSION['loginadmin']);
-		session_destroy();
-		header("Location: login_admin.php");
+	if(isset($_POST['cancel'])){
+		//unset($_SESSION['loginclient']);
+		//session_destroy();
+		header("Location: admin_home.php");
 		exit;
 	}
 			
@@ -47,8 +49,8 @@
 			<input type="submit" name="Submit" value="Change my password" />	
 		</form>
 		<form name="logout" action="#" method="POST">
-			<input type="submit" name="logoutadmin" value="Log Out Admin" />
+			<input type="submit" name="cancel" value="Cancel" />
 		</form>
-		<?php } else echo "You're not login."?>
+		<?php } else{header("Location: login.php");}?>
 	</body>
 </html>

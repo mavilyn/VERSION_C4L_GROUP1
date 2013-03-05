@@ -54,37 +54,40 @@
 		var $mgrflag;
 	
 		function Admin($username, $password, $empid, $mgrflag){
-			$this->set_empid($empid);
-			$this->set_mgrflag($mgrflag);
 			$this->set_username($username);
 			$this->set_password($password);
+			$this->set_mgrflag($mgrflag);
+			$this->set_empid($empid);
 		}	
 		//setter
 
-		function set_mgrflag($mgrflag){
-			$this->lname=$mgrflag;
-		}
-		function set_empid($empid){
-			$this->accountnum=$empid;
-		}
 		function set_username($username){
 			$this->username=$username;
 		}
 		function set_password($password){
 			$this->password=$password;
 		}
+		
+		function set_empid($empid){
+			$this->empid=$empid;
+		}
+		
+		function set_mgrflag($mgrflag){
+			$this->mgrflag=$mgrflag;
+		}
+		
 		//getter
-		function get_empid(){
-			return $this->empid;
-		}
-		function get_mgrflag(){
-			return $this->mgrflag;
-		}
 		function get_username(){
 			return $this->username;
 		}
 		function get_password(){
 			return $this->password;
+		}
+		function get_empid(){
+			return $this->empid;
+		}
+		function get_mgrflag(){
+			return $this->mgrflag;
 		}
 	}
 	?>

@@ -21,7 +21,7 @@ CREATE TABLE CLIENT(
 		email VARCHAR2(50),
 		contact VARCHAR2(50),
 		spouse VARCHAR2(100),
-		mother VARCHAR2(100) NOT NULL ENABqLE,
+		mother VARCHAR2(100) NOT NULL ENABLE,
 		secret VARCHAR2(50) NOT NULL ENABLE,
 		answer VARCHAR2(50) NOT NULL ENABLE,
 		activation NUMBER(1,0) NOT NULL ENABLE, /*serve as flag*/
@@ -62,22 +62,6 @@ CREATE TABLE ADDBILLER_REQUEST(
 	billeraccountnum NUMBER(10, 0) NOT NULL ENABLE,
 	billername VARCHAR2(30) NOT NULL,
 	refnum NUMBER(11,0) NOT NULL,
-	requestDate DATE NOT NULL,
-	appDisDate DATE,
-	appDisFlag NUMBER(1,0),
-	CONSTRAINT addbiller_accountnum_fk FOREIGN KEY(accountnum)
-                REFERENCES CLIENT(accountnum) ENABLE
-	/*CONSTRAINT addbiller_refnum_pk PRIMARY KEY(refnum) ENABLE*/
-);
-
-CREATE TABLE BILLER_REQ_STAT(		
-	accountnum NUMBER(10,0) NOT NULL ENABLE,
-	billeraccountnum NUMBER(10, 0) NOT NULL ENABLE,
-	billername VARCHAR2(30) NOT NULL,
-	refnum NUMBER(11,0) NOT NULL,
-	requestDate DATE NOT NULL,
-	appDisDate DATE,
-	appDisFlag NUMBER(1,0),
 	CONSTRAINT addbiller_accountnum_fk FOREIGN KEY(accountnum)
                 REFERENCES CLIENT(accountnum) ENABLE
 	/*CONSTRAINT addbiller_refnum_pk PRIMARY KEY(refnum) ENABLE*/
@@ -86,12 +70,13 @@ CREATE TABLE BILLER_REQ_STAT(
 CREATE TABLE TRANSACT_PAYBILLS(
 		accountnum NUMBER(10,0) NOT NULL ENABLE,
 		billeraccountnum NUMBER(10,0) NOT NULL ENABLE,
-		refnum NUMBER(11,0) NOT NULL ENABLE,
+		transactiontype VARCHAR2(30) NOT NULL ENABLE,	
 		transactdate DATE NOT NULL ENABLE,
 		transactcost NUMBER(10,5) NOT NULL,
 		/*transactbranch VARCHAR(50) NOT NULL,	*/	
-		/*transactnum NUMBER(30,0) NOT NULL ENABLE, /*increments*/
-		/*CONSTRAINT pay_transactnum_pk PRIMARY KEY(transactnum),*/
+		transactionop VARCHAR2(7) NOT NULL ENABLE, 
+		transactnum NUMBER(30,0) NOT NULL ENABLE, /*increments*/
+		CONSTRAINT pay_transactnum_pk PRIMARY KEY(transactnum),
 		CONSTRAINT paybills_accountnum_fk FOREIGN KEY(accountnum)
                 REFERENCES CLIENT(accountnum)/*,
 		CONSTRAINT FOREIGN KEY(refnum)
@@ -111,7 +96,7 @@ CREATE TABLE ADDACCNTCONNECT_REQUEST(
 	accountnum NUMBER(10,0) NOT NULL,
 	otheraccountnum NUMBER(10,0) NOT NULL, /*check kung nasa bank database at hindi siya yung sariling account*/
 	preferredname VARCHAR2(30),
-	CONSTRAINT accountconnected_account_fk FOREIGN KEY(accountnum)
+	CONSTRAINT accountconnected_accountnum_fk FOREIGN KEY(accountnum)
                 REFERENCES CLIENT(accountnum)
 	/*,CONSTRAINT accountconnected_otheraccountnum_pk PRIMARY KEY(otheraccountnum)*/
 );

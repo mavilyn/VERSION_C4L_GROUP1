@@ -453,3 +453,21 @@ function checkEnroll(){
 								}
 			}
 		}
+		
+		function checkAddAccount(){
+			var otheraccountnum = document.forms["addOther_form"]["otheraccountnum"].value;
+			var valid = true;
+			if(otheraccountnum == "" || isNaN(otheraccountnum)){
+				document.getElementById("otheraccountnumErr").innerHTML = "Please verify other account number.";
+				valid = false;
+			}
+			if(valid==false){
+				return false;
+			}
+			else{
+				var confirmation = confirm('Are you sure you want to request to get connected to this account?');
+								if(confirmation == false){
+									return false;
+								}
+			}
+		}

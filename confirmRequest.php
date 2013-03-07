@@ -3,37 +3,62 @@
   		session_start();
 			/*add biller for customer*/
 			if (isset($_POST['Submit'])) {
+				
+			
 				$conn = oci_connect('guestbank', 'kayato1');
 				if(isset($_POST['disapproved'])){
 					foreach($_POST['disapproved'] as $disapprove){
-						$aquery = 'UPDATE ADDBILLER_REQUEST SET appDisDate = SYSDATE, appDisFlag = 0 where refnum = :refnum';
+						$token = strtok($disapprove, " ");
+						//while ($token != false)
+						 // {
+						  //echo "$token<br />";
+						  $accountnum = $token;
+						  $token = strtok(" ");
+						  $billeraccountnum = $token;
+						  $token = strtok(" ");
+						  $refnum = $token;
+						  //} 
+						$aquery = 'UPDATE ADDBILLER_REQUEST SET appDisDate = SYSDATE, appDisFlag = 0 where refnum = :refnum and billeraccountnum = :billeraccountnum and accountnum = :accountnum';
 						$sid = oci_parse($conn, $aquery);
-						oci_bind_by_name($sid, ':refnum', $disapprove);
+						oci_bind_by_name($sid, ':refnum', $refnum);
+						oci_bind_by_name($sid, ':billeraccountnum', $billeraccountnum);
+						oci_bind_by_name($sid, ':accountnum', $accountnum);
 						oci_execute($sid);
 					}
 				}
 				if(isset($_POST['approved'])){
 					foreach($_POST['approved'] as $approve){
 					
-						$query =  'SELECT accountnum FROM addbiller_request where refnum = :refnum';
+						$token = strtok($approve, " ");
+						//while ($token != false)
+						 // {
+						  //echo "$token<br />";
+						  $accountnum = $token;
+						  $token = strtok(" ");
+						  $billeraccountnum = $token;
+						  $token = strtok(" ");
+						  $refnum = $token;
+						  $token = strtok(" ");
+						  $billername = $token;
+						/*$query =  'SELECT accountnum FROM addbiller_request where refnum = :refnum';
 						$compiled = oci_parse($conn, $query);
 						oci_bind_by_name($compiled, ':refnum', $approve);
 						oci_execute($compiled);
 						$accountnum = oci_fetch_array($compiled, OCI_RETURN_NULLS+OCI_ASSOC);
-						
-						$query =  'SELECT * FROM addbiller_request where refnum = :refnum';
+						*/
+						/*$query =  'SELECT * FROM addbiller_request where refnum = :refnum';
 						$compiled = oci_parse($conn, $query);
 						oci_bind_by_name($compiled, ':refnum', $approve);
 						oci_execute($compiled);
-						/*$billername = oci_fetch_array($compiled, OCI_RETURN_NULLS+OCI_ASSOC);
-						
+						$billername = oci_fetch_array($compiled, OCI_RETURN_NULLS+OCI_ASSOC);*/
+						/*
 						foreach ($accountnum as $acctnum){
 							foreach ($billername as $biller){
 								
 							}
 						}*/
 						
-					while ($row = oci_fetch_array($compiled, OCI_BOTH)) {
+					/*while ($row = oci_fetch_array($compiled, OCI_BOTH)) {
 							$biller=$row[2];
 							$acctnum=$row[0];
 						}
@@ -45,20 +70,22 @@
 
 						while ($row = oci_fetch_array($stmt, OCI_BOTH)) {
 							$billeraccountnum=$row[0];
-						}
+						}*/
 						
 						$query =  'INSERT into biller values(:accountnum, :billeraccountnum, :billername, :refnum)';
 						$compiled = oci_parse($conn, $query);
-						oci_bind_by_name($compiled, ':accountnum', $acctnum);
+						oci_bind_by_name($compiled, ':accountnum', $accountnum);
 						oci_bind_by_name($compiled, ':billeraccountnum', $billeraccountnum);
-						oci_bind_by_name($compiled, ':billername', $biller);
-						oci_bind_by_name($compiled, ':refnum', $approve);
+						oci_bind_by_name($compiled, ':billername', $billername);
+						oci_bind_by_name($compiled, ':refnum', $refnum);
 						oci_execute($compiled);
 						
 								
-						$aquery = 'UPDATE ADDBILLER_REQUEST SET appDisDate = SYSDATE, appDisFlag = 1 where refnum = :refnum';
+						$aquery = 'UPDATE ADDBILLER_REQUEST SET appDisDate = SYSDATE, appDisFlag = 1 where refnum = :refnum and billeraccountnum = :billeraccountnum and accountnum = :accountnum';
 						$sid = oci_parse($conn, $aquery);
-						oci_bind_by_name($sid, ':refnum', $approve);
+						oci_bind_by_name($sid, ':refnum', $refnum);
+						oci_bind_by_name($sid, ':accountnum', $accountnum);
+						oci_bind_by_name($sid, ':billeraccountnum', $billeraccountnum);
 						oci_execute($sid);
 						
 						
@@ -77,7 +104,7 @@
 
 				$conn = oci_connect("guestbank", "kayato1");
 		
-				$query = 'select * from addbiller_request where appDisDate IS NULL';
+				$query = 'select * from addbiller_request where appDisFlag IS NULL';
 				$stid = oci_parse($conn, $query);
 				oci_execute($stid);
 				
@@ -109,16 +136,16 @@
 						print'<td>'.$row[3]; echo'</td>';
 					//}
 					print '<td>';
-					print '<input type="checkbox" name="approved[]" value="'.$row[3].'"/>';
+					print '<input type="checkbox" name="approved[]" value="'.$row[0].' '.$row[1].' '.$row[3].' '.$row[2].'"/>';
 					echo '</td>';
 					print '<td>';
-					print '<input type="checkbox" name="disapproved[]" value="'.$row[3].'"/>';
+					print '<input type="checkbox" name="disapproved[]" value="'.$row[0].' '.$row[1].' '.$row[3].'"/>';
 					echo '</td>';
 					echo '</tr>';
 				}
 				print '</table>';?>
 			<input type="submit" name="Submit" value="Submit" />	
 		</form>
-		<?php } else echo "You're not logged in"?>
+		<?php } else header('Location: login.php');?>
 	</body>
 </html>

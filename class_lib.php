@@ -90,4 +90,30 @@
 			return $this->mgrflag;
 		}
 	}
-	?>
+	
+	class Transaction{
+	
+		var $accountnum;
+		var $otheraccountnum;
+		var $transactiontype;
+		var $tranasactiondate;
+		var $transactcost;
+		var $transactionop;
+		var $transactnum;
+		var $classify;
+	
+		function Transaction($accountnum, $otheraccountnum, $transactiontype, $transactiondate, $transactcost, $transactionop, $transactnum, $classify){
+
+		$this->accountnum = $accountnum;
+		$this->otheraccountnum = $otheraccountnum;
+		$this->transactiontype = $transactiontype;
+		$this->transactiondate = $transactiondate;
+		$this->transactcost= $transactcost;
+		$this->transactionop = $transactionop;
+		$this->transactnum = $transactnum;
+		$this->classify = $classify;				 
+		
+		}	
+	}
+
+?>

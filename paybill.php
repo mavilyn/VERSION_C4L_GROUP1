@@ -69,6 +69,7 @@
 					$stid = oci_parse($conn, $query);
 					oci_bind_by_name($stid, ':accountnum', $_POST['billers']);
 					oci_bind_by_name($stid, ':transactioncost', $_POST['Amount']);
+					oci_bind_by_name($stid, ':refnum', $_POST['Amount']);
 					//oci_bind_by_name($stid, ':transtype', "online");
 					//oci_bind_by_name($stid, ':transop', "credit");
 					oci_execute($stid);

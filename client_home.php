@@ -37,6 +37,10 @@
 	if(isset($_POST['deactivate'])){
 		header("Location: deactivate.php");
 	}
+	
+	if(isset($_POST['viewaccountrecord'])){
+		header("Location: viewaccountrecord.php");
+	}
 
 	if(isset($_POST['logoutclient'])){
 		unset($_SESSION['loginclient']);
@@ -62,6 +66,7 @@ echo "Welcome ".$_SESSION['client']->get_username();?>
 	<input type="submit" name="transferfund" value="Transfer Funds" />
 	<input type="submit" name="viewbillerstat" value="View Biller Request Status" />
 	<input type="submit" name="viewaccountstat" value="View Account Connection Request Status" />
+	<input type="submit" name="viewaccountrecord" value="View Account Record" />
 	<input type="submit" name="deactivation" value="Deactivate My Account" />
 	
 	

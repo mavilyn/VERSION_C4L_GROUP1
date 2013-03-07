@@ -28,8 +28,7 @@ CREATE TABLE TRANS(
 		transactdate DATE NOT NULL,
 		transactcost NUMBER(10,5) NOT NULL,
 		/*transactbranch VARCHAR2(50) NOT NULL,	*/	
-		transactionop VARCHAR2(7) NOT NULL,	/*debit/credit*/
-		/*refnum NUMBER(11, 0), /*for pay bills info*/
+		transactionop VARCHAR2(7) NOT NULL,	/*debit/credit*/ 
 		CONSTRAINT transactions_transactnum_pk PRIMARY KEY(transactnum),
 		CONSTRAINT transactions_accountnum_fk FOREIGN KEY(accountnum)
                 REFERENCES ACCOUNT(accountnum)

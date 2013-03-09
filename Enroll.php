@@ -36,7 +36,8 @@
 			$province = $_POST['province'];
 			
 			$accountnum = $_POST['accountnum'];
-			$atmpin = $_POST['atmpin'];
+			
+			echo md5(md5(1234));
 			
 			$connGuest = oci_connect("guestbank", "kayato1");
 			
@@ -62,10 +63,11 @@
 			
 				$stid2 = oci_parse($connMain,
 					'SELECT COUNT(*) AS NUM_ROWS2 FROM account
-					WHERE accountnum = '.$accountnum.'and atmpin = '.$atmpin
+					WHERE accountnum = '.$accountnum.'and atmpin = :atmpin'
 				);
 
 				oci_define_by_name($stid2, 'NUM_ROWS2', $num_rows2);
+				oci_bind_by_name($stid2, ':atmpin', md5(md5($_POST['atmpin'])));
 				oci_execute($stid2);
 				oci_fetch($stid2);
 				

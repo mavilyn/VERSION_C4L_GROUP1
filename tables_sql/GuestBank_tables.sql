@@ -83,16 +83,21 @@ CREATE TABLE ADDACCNTCONNECT_REQUEST(
 	/*,CONSTRAINT accountconnected_otheraccountnum_pk PRIMARY KEY(otheraccountnum)*/
 );
 
-create or replace function md5(
-  in_string in varchar2)
-return varchar2
-as
-  cln_md5raw raw(2000);
-  out_raw raw(16);
-begin
-  cln_md5raw := utl_raw.cast_to_raw(in_string);
-  dbms_obfuscation_toolkit.md5(input=>cln_md5raw,checksum=>out_raw);
-  -- return hex version (32 length)
-  return rawtohex(out_raw);
-end;
+CREATE OR REPLACE FUNCTION MD5RAW( v_input_string in varchar2 )
+RETURN varchar2 IS
+v_checksum varchar2( 32 );
+BEGIN
+    v_checksum := SYS.DBMS_OBFUSCATION_TOOLKIT.MD5( input_string => v_input_string );
+    return v_checksum;
+END;
+/
+CREATE OR REPLACE FUNCTION md5( v_input_string in varchar2 )
+RETURN varchar2 IS
+v_hex_value varchar2( 32 );
+BEGIN
+    SELECT  LOWER( RAWTOHEX( MD5RAW( v_input_string ) ) ) 
+    INTO    v_hex_value
+    FROM    dual;
+    return v_hex_value;
+END;
 /

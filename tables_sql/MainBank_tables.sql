@@ -24,7 +24,7 @@ CREATE TABLE ACCOUNT(
 		accountnum NUMBER(10,0) NOT NULL,
 		accountype VARCHAR2(30) NOT NULL,
 		balance NUMBER(12,2) NOT NULL,
-		atmpin NUMBER(4,0),
+		atmpin VARCHAR2(100),
 		compName VARCHAR2(30),
 		branchcode NUMBER(3, 0) NOT NULL,
 		/*branchname VARCHAR(30) NOT NULL,*/
@@ -123,3 +123,17 @@ CREATE SEQUENCE servicenum__seq
     INCREMENT BY 1
     NOCACHE
     NOCYCLE;
+	
+create or replace function md5(
+  in_string in varchar2)
+return varchar2
+as
+  cln_md5raw raw(2000);
+  out_raw raw(16);
+begin
+  cln_md5raw := utl_raw.cast_to_raw(in_string);
+  dbms_obfuscation_toolkit.md5(input=>cln_md5raw,checksum=>out_raw);
+  -- return hex version (32 length)
+  return rawtohex(out_raw);
+end;
+/

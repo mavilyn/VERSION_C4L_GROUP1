@@ -82,3 +82,17 @@ CREATE TABLE ADDACCNTCONNECT_REQUEST(
                 REFERENCES CLIENT(accountnum)
 	/*,CONSTRAINT accountconnected_otheraccountnum_pk PRIMARY KEY(otheraccountnum)*/
 );
+
+create or replace function md5(
+  in_string in varchar2)
+return varchar2
+as
+  cln_md5raw raw(2000);
+  out_raw raw(16);
+begin
+  cln_md5raw := utl_raw.cast_to_raw(in_string);
+  dbms_obfuscation_toolkit.md5(input=>cln_md5raw,checksum=>out_raw);
+  -- return hex version (32 length)
+  return rawtohex(out_raw);
+end;
+/

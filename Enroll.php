@@ -34,6 +34,7 @@
 			$brgy = $_POST['brgy'];
 			$city = $_POST['city'];
 			$province = $_POST['province'];
+			//$code = $_POST['code'];
 			
 			$accountnum = $_POST['accountnum'];
 			
@@ -171,6 +172,9 @@
 			*** ATM Pin: <input type = "password" name="atmpin" maxlength="4">
 			<span id="atmpinErr" style="color:red;font-weight:bold;"></span>		
 			<br />
+			<!--*** Code: <input type = "text" name="code" maxlength="4">
+			<span id="atmpinErr" style="color:red;font-weight:bold;"></span>	
+			<br />-->
 			<br /> <br />
 			<b><i>Second Step --- Enter your personal information</i></b>
 			<br /> <br />

@@ -14,7 +14,7 @@
 					$sql="select billername from billerlist where blist_accountnum ='".$_POST['billers']."'";
 					$stmt = oci_parse($conn, $sql);
 					oci_execute($stmt);
-					while($row = oci_fetch_array($stid, OCI_BOTH)){
+					while($row = oci_fetch_array($stmt, OCI_BOTH)){
 						$billername = $row[0];
 					}
 					
@@ -32,6 +32,7 @@
 						oci_fetch($parsed);
 						
 						if($numRequest > 0){
+							//UNSUCESSFUL
 							echo "<script>alert('Unsuccessful! Request is already pending.');</script>";
 						}
 						else{
@@ -75,7 +76,7 @@
 	<body>
 	<?php if(isset($_SESSION['loginclient'])){ echo "Welcome ".$_SESSION['client']->get_username()?>
 		<form name = "addBiller_form" method ="post" action = "addBiller.php" onsubmit="return checkAddBiller();">
-			Reference Number: <input type = "text" name="refnum" maxlength="10"/><span id="refNumErr" style="color: red"> </span><br/>
+			Reference Number: <input type = "text" name="refnum" maxlength="11"/><span id="refNumErr" style="color: red"> </span><br/>
 			<?php
 				$conn = oci_connect("mainbank", "kayato1");
 				

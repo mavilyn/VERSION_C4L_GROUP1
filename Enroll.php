@@ -37,8 +37,6 @@
 			
 			$accountnum = $_POST['accountnum'];
 			
-			echo md5(md5(1234));
-			
 			$connGuest = oci_connect("guestbank", "kayato1");
 			
 				$stid = oci_parse($connGuest,

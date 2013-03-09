@@ -1,14 +1,3 @@
-/*
-
-*/
-
-ALTER TABLE 
-   ACCOUNT 
-MODIFY 
-   ( 
-   atmpin varchar2(100)
-   )
-;
 
 INSERT INTO BANK_BRANCH VALUES(1, 'Sta. Cruz Laguna');
 INSERT INTO BANK_BRANCH VALUES(2, 'Los Banos Laguna');

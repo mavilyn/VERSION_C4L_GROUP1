@@ -92,16 +92,21 @@
 	<head>
 		<title>	Pay Bills </title>
 		<script type="text/javascript" src="onlinebank.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	</head>
 	<body>
 	<?php if(isset($_SESSION['loginclient'])){ echo "Welcome ".$_SESSION['client']->get_username()?>
 		<form name = "paybill_form" method ="post" action = "#" >
+			<!--
+
+</head>
+<body>-->
 			<?php
 				/*hindi ko maisip itsura pero dropdown tapos amount ay textfield*/
 				$tempaccountnum = $_SESSION['client']->get_accountnum();
 				$conn = oci_connect("guestbank", "kayato1");
 				
-				$query = 'select * from biller where accountnum=:accountnumber';
+				$query = 'select * from current_biller where accountnum=:accountnumber';
 				$stid = oci_parse($conn, $query);
 				oci_bind_by_name($stid, ':accountnumber', $tempaccountnum);
 				oci_execute($stid, OCI_DEFAULT);
@@ -115,12 +120,40 @@
 							print'<option value="'.$billeraccountnum.'">'.$billername." - ".$refnum; echo'</option>';
 						}
 						print '</select><br/>';
-				
+					
 				
 				oci_close($conn);
 				
 			?>
-			Amount<input type="text" name="Amount"/><br/>
+			<!--Amount<input type="text" name="Amount"/><br/>-->
+			<script>
+			$(document).ready(function(){
+			  $("select").change(function(){
+
+			      var billeraccountnum = $(this).val();  
+      			  $("#bills").fadeIn(2000);	
+			  });
+			});
+			</script>
+				<div id="bills" style="width:80px;height:80px;display:none;">
+						<?php 
+						
+
+						?>
+						<!--
+							function displayVals() {
+      var singleValues = $("#single").val();
+      var multipleValues = $("#multiple").val() || [];
+      $("p").html("<b>Single:</b> " +
+                  singleValues +
+                  " <b>Multiple:</b> " +
+                  multipleValues.join(", "));
+    }
+ 
+    $("select").change(displayVals);
+    displayVals();
+						-->
+				</div>
 			<input type="submit" name="Submit" value="Pay Bills" />	
 		</form>
 		<?php }else header('Location: login.php'); ?>

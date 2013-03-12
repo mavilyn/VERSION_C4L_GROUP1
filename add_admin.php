@@ -23,14 +23,24 @@
 			else{
 				
 				$connMain = oci_connect("mainbank", "kayato1");
-			
+				$adminEmpid = $_SESSION['admin']->get_empid();
+
+				$query = 'select * from employee where empid=:empid';
+									$stid = oci_parse($connMain, $query);
+									oci_bind_by_name($stid, ':empid', $adminEmpid);
+									oci_execute($stid, OCI_DEFAULT);
+
+									while ($row = oci_fetch_array($stid, OCI_BOTH)) {
+										$branchcode = $row[4];	
+									}
+
 				$stid2 = oci_parse($connMain,
 					'SELECT COUNT(*) AS NUM_ROWS2 FROM employee
-					WHERE empid = '.$empid
+					WHERE empid = :empid and branchcode = :branchcode'
 				);
 
 				oci_define_by_name($stid2, 'NUM_ROWS2', $num_rows2);
-			
+				oci_bind_by_name($stid, ':empid', $empid);
 				oci_execute($stid2);
 				oci_fetch($stid2);
 				
@@ -62,7 +72,7 @@
 									oci_execute($stmt, OCI_DEFAULT);
 
 									while ($row = oci_fetch_array($stmt, OCI_BOTH)) {
-										$mgrflag=$row[5];
+										$mgrflag=$row[6];
 									}
 									
 									$password = md5(md5($_POST['password']));

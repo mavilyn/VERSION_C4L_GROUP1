@@ -49,11 +49,12 @@
 								echo "<script>alert('Biller already connected to your account.');</script>";
 							}
 							else{
+								$accountnum = $_SESSION['client']->get_accountnum();
 							
 								//INSERT THE BILLER REQUEST TO THE ADDBILLER_REQUEST
 								$query =  'INSERT into addbiller_request(accountnum, billeraccountnum, billername, refnum, requestDate) values(:accountnum, :billeraccountnum, :billername, :refnum, SYSDATE)';
 								$compiled = oci_parse($conn, $query);
-								oci_bind_by_name($compiled, ':accountnum', $_SESSION['client']->get_accountnum());
+								oci_bind_by_name($compiled, ':accountnum', $accountnum);
 								oci_bind_by_name($compiled, ':billername', $billername);
 								oci_bind_by_name($compiled, ':billeraccountnum', $_POST['billers']);
 								oci_bind_by_name($compiled, ':refnum', $_POST['refnum']);

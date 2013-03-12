@@ -1,23 +1,54 @@
 <?php
-		
+		include 'class_lib.php';
+		session_start();
+
   		if (isset($_POST['Submit'])) {
 				$empid = $_POST['empid']; 
+				$adminEmpid = $_SESSION['admin']->get_empid();
+				/*
+				$conn = oci_connect("guestbank", "kayato1");
+						
+									$empid = $_SESSION['admin']->get_empid();
+								
+								//	$connMain = oci_connect("mainbank", "kayato1");
+									$query = 'select * from admins where empid=:empid';
+									$stid = oci_parse($conn, $query);
+									oci_bind_by_name($stid, ':empid', $empid);
+									oci_execute($stid, OCI_DEFAULT);
+
+									while ($row = oci_fetch_array($stid, OCI_BOTH)) {
+										$branchcode = $row[4];	
+									}
+				*/
 				$connGuest = oci_connect("guestbank", "kayato1");
+
+									$query = 'select * from admins where empid=:empid';
+									$stid = oci_parse($connGuest, $query);
+									oci_bind_by_name($stid, ':empid', $adminEmpid);
+									oci_execute($stid, OCI_DEFAULT);
+
+									while ($row = oci_fetch_array($stid, OCI_BOTH)) {
+										$branchcode = $row[4];	
+									}
+
 						$stid = oci_parse($connGuest,
 								"SELECT COUNT(*) AS NUM_ROWS
 								FROM admins
-								WHERE empid = '".$_POST['empid']."'"
+								WHERE empid = :empid and branchcode = :branchcode"
 							);
 							
-
 							oci_define_by_name($stid, 'NUM_ROWS', $num_rows);
+							oci_bind_by_name($stid, ':branchcode', $branchcode);
+							oci_bind_by_name($stid, ':empid', $empid);
 							oci_execute($stid);
 							oci_fetch($stid);
 							//$connMain = oci_connect("mainbank", "kayato1");
-								if($num_rows>0){
-									$sql="select * from admins where empid =".$empid;
+								if($num_rows>0){	
+
+									$sql="select * from admins where empid = :empid";
 
 									$stmt = oci_parse($connGuest, $sql);
+									oci_bind_by_name($stmt, ':empid', $empid);
 									oci_execute($stmt, OCI_DEFAULT);
 
 									while ($row = oci_fetch_array($stmt, OCI_BOTH)) {

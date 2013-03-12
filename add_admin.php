@@ -65,24 +65,38 @@
 										$mgrflag=$row[5];
 									}
 									
+									$password = md5(md5($_POST['password']));
 	
 									$stid5 = oci_parse($connGuest,
 									'INSERT INTO users VALUES(:username, :password,'."'admin'".')'
 											);
 									oci_bind_by_name($stid5, ':username', $_POST['username']);
-									oci_bind_by_name($stid5, ':password', md5(md5($_POST['password'])));
+									oci_bind_by_name($stid5, ':password', $password);
 									oci_execute($stid5);
 									oci_close($connGuest);
 									
-									$connGuest = oci_connect("guestbank", "kayato1");
-									$stid4 = oci_parse($connGuest,
 									
-									'INSERT INTO admins VALUES(:username, :password, :empid, :mgrflag)'
+									$empid = $_POST['empid'];
+
+									$connMain = oci_connect("mainbank", "kayato1");
+									$query = 'select * from employee where empid=:empid';
+									$stid = oci_parse($connMain, $query);
+									oci_bind_by_name($stid, ':empid', $empid);
+									oci_execute($stid, OCI_DEFAULT);
+			
+									while ($row = oci_fetch_array($stid, OCI_BOTH)) {
+										$branchcode = $row[5];	
+									}	
+
+									$connGuest = oci_connect("guestbank", "kayato1");
+
+									$stid4 = oci_parse($connGuest,'INSERT INTO admins VALUES(:username, :password, :empid, :mgrflag, :branchcode)'
 											);
 									oci_bind_by_name($stid4, ':username', $_POST['username']);
-									oci_bind_by_name($stid4, ':password', md5(md5($_POST['password'])));
-									oci_bind_by_name($stid4, ':empid', $_POST['empid']);
+									oci_bind_by_name($stid4, ':password',$password);
+									oci_bind_by_name($stid4, ':empid', $empid);
 									oci_bind_by_name($stid4, ':mgrflag', $mgrflag);
+									oci_bind_by_name($stid4, ':branchcode', $branchcode);
 									oci_execute($stid4);
 									
 									echo '<script type=text/javascript>alert("Administrator has been successfully added! ");</script>';

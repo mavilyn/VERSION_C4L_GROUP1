@@ -48,6 +48,11 @@
 		header("Location: login.php");
 		exit;
 	}
+
+	if(isset($_POST['updatePersonal'])){
+		header("Location: updateInfo.php");
+		exit;
+	}
 ?>
 
 <html>
@@ -56,7 +61,7 @@
 	</head>
 	<body>
 <?php if(isset($_SESSION['loginclient'])){
-echo "Welcome ".$_SESSION['client']->get_username();?>
+echo "Welcome ".$_SESSION['client']->get_fname()." ".$_SESSION['client']->get_lname();?>
 <form name= "taas" action="#" method = "POST" >
 	<input type="submit" name="logoutclient" value="Log Out Client" />
 	<input type="submit" name="changepassword" value="Change Password" />
@@ -67,6 +72,7 @@ echo "Welcome ".$_SESSION['client']->get_username();?>
 	<input type="submit" name="viewbillerstat" value="View Biller Request Status" />
 	<input type="submit" name="viewaccountstat" value="View Account Connection Request Status" />
 	<input type="submit" name="viewaccountrecord" value="View Account Record" />
+	<input type="submit" name="updatePersonal" value="Update Personal Information" />
 	<input type="submit" name="deactivation" value="Deactivate My Account" />
 	
 	

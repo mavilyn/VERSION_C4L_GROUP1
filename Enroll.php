@@ -37,7 +37,8 @@
 			//$code = $_POST['code'];
 			
 			$accountnum = $_POST['accountnum'];
-			
+			$atmpin = md5(md5($_POST['atmpin']));
+
 			$connGuest = oci_connect("guestbank", "kayato1");
 			
 				$stid = oci_parse($connGuest,
@@ -66,7 +67,7 @@
 				);
 
 				oci_define_by_name($stid2, 'NUM_ROWS2', $num_rows2);
-				oci_bind_by_name($stid2, ':atmpin', md5(md5($_POST['atmpin'])));
+				oci_bind_by_name($stid2, ':atmpin', $atmpin);
 				oci_execute($stid2);
 				oci_fetch($stid2);
 				
@@ -88,43 +89,65 @@
 							echo "<script>alert('Username already exist. Please choose another username.');</script>";
 						}
 						else{
+										$username = $_POST['username'];
+										$password=md5(md5($_POST['password']));
+										$accountnum= $_POST['accountnum'];
+										$fname=$_POST['fname'];
+										$mname=$_POST['mname'];
+										$lname=$_POST['lname'];
+										$gender=$_POST['gender'];
+										$civilstat=$_POST['civilstat'];
+										$email=$_POST['email'];
+										$contact= $_POST['contact'];
+										$spouse=$_POST['spouse'];
+										$mother=$_POST['mother'];
+										$secret= md5(md5($_POST['secret']));
+										$answer=md5(md5($_POST['answer']));
+										$activation = 1;
+
 							$connGuest = oci_connect("guestbank", "kayato1");
 							$birthday = $_POST['month']."-".$_POST['day']."-".$_POST['year'];
-							$homeaddress = $_POST['brgy']."".$_POST['city']."".$_POST['province'];
+							$homeaddress = $_POST['brgy'].", ".$_POST['city'].", ".$_POST['province'];
 										
+										$connMain = oci_connect("mainbank", "kayato1");
+										$query = 'select * from account where accountnum=:accountnum';
+										$stid = oci_parse($connMain, $query);
+										oci_bind_by_name($stid, ':accountnum', $accountnum);
+										oci_execute($stid, OCI_DEFAULT);
+				
+										while ($row = oci_fetch_array($stid, OCI_BOTH)) {
+											$branchcode = $row[5];	
+										}	
 										
 										$stid4 = oci_parse($connGuest,
 										'INSERT INTO users VALUES(:username, :password,'."'client'".')'
 												);
-										oci_bind_by_name($stid4, ':username', $_POST['username']);
-										oci_bind_by_name($stid4, ':password', md5(md5($_POST['password'])));
+										oci_bind_by_name($stid4, ':username', $username);
+										oci_bind_by_name($stid4, ':password', $password);
 										oci_execute($stid4);
-										
-										oci_close($connGuest);
-										
-										$connGuest = oci_connect("guestbank", "kayato1");
-										
-										$stid3 = oci_parse($connGuest,
-										'INSERT INTO client VALUES(:username, :password, :accountnum, :fname, :mname, :lname, :gender, :homeaddress, :civilstat, :birthday, :email, :contact, :spouse, :mother, :secret, :answer, 1)'
-												);
-										oci_bind_by_name($stid3, ':username', $_POST['username']);
-										oci_bind_by_name($stid3, ':password', md5(md5($_POST['password'])));
-										oci_bind_by_name($stid3, ':accountnum', $_POST['accountnum']);
-										oci_bind_by_name($stid3, ':fname', $_POST['fname']);
-										oci_bind_by_name($stid3, ':mname', $_POST['mname']);
-										oci_bind_by_name($stid3, ':lname', $_POST['lname']);
-										oci_bind_by_name($stid3, ':gender', $_POST['gender']);
+
+										$stmt = 'INSERT INTO client VALUES(:username, :password, :accountnum, :fname, :mname, :lname, :gender, :homeaddress, :civilstat, :birthday, :email, :contact, :spouse, :mother, :secret, :answer, :activation, :branchcode)';
+										$stid3 = oci_parse($connGuest, $stmt);
+										oci_bind_by_name($stid3, ':username', $username);
+										oci_bind_by_name($stid3, ':password', $password);
+										oci_bind_by_name($stid3, ':accountnum', $accountnum);
+										oci_bind_by_name($stid3, ':fname', $fname);
+										oci_bind_by_name($stid3, ':mname', $mname);
+										oci_bind_by_name($stid3, ':lname', $lname);
+										oci_bind_by_name($stid3, ':gender', $gender);
 										oci_bind_by_name($stid3, ':homeaddress', $homeaddress);
-										oci_bind_by_name($stid3, ':gender', $_POST['gender']);
-										oci_bind_by_name($stid3, ':civilstat', $_POST['civilstat']);
+										oci_bind_by_name($stid3, ':civilstat', $civilstat);
 										oci_bind_by_name($stid3, ':birthday', $birthday);
-										oci_bind_by_name($stid3, ':email', $_POST['email']);
-										oci_bind_by_name($stid3, ':contact', $_POST['contact']);
-										oci_bind_by_name($stid3, ':spouse', $_POST['spouse']);
-										oci_bind_by_name($stid3, ':mother', $_POST['mother']);
-										oci_bind_by_name($stid3, ':secret', md5(md5($_POST['secret'])));
-										oci_bind_by_name($stid3, ':answer', md5(md5($_POST['answer'])));
+										oci_bind_by_name($stid3, ':email', $email);
+										oci_bind_by_name($stid3, ':contact', $contact);
+										oci_bind_by_name($stid3, ':spouse', $spouse);
+										oci_bind_by_name($stid3, ':mother', $mother);
+										oci_bind_by_name($stid3, ':secret', $secret);
+										oci_bind_by_name($stid3, ':answer', $answer);
+										oci_bind_by_name($stid3, ':branchcode', $branchcode);
+										oci_bind_by_name($stid3, ':activation', $activation);
 										oci_execute($stid3);
+							
 										
 										oci_close($connGuest);
 										

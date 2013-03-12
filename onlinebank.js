@@ -471,3 +471,166 @@ function checkEnroll(){
 								}
 			}
 		}
+
+		function checkUpdatePersonal(){
+
+			var valid = true;
+			var fname=document.forms["update_personal"]["fname"].value;
+			var mname=document.forms["update_personal"]["mname"].value;
+			var lname=document.forms["update_personal"]["lname"].value;
+			var male = document.getElementById('male');
+		   	var female = document.getElementById('female');
+			var brgy=document.forms["update_personal"]["brgy"].value;
+			var city=document.forms["update_personal"]["city"].value;
+			var province=document.forms["update_personal"]["province"].value;
+			var month = document.forms["update_personal"]["month"].value;
+			var day = document.forms["update_personal"]["day"].value;
+			var year = document.forms["update_personal"]["year"].value;
+			var email=document.forms["update_personal"]["email"].value;
+			var atpos=email.indexOf("@");
+			var dotpos=email.lastIndexOf(".");
+			var contact=document.forms["update_personal"]["contact"].value;
+			var spouse=document.forms["update_personal"]["spouse"].value;
+			var mother=document.forms["update_personal"]["mother"].value;
+
+						if(checkletter(fname)==false){
+							document.getElementById("fnameErr").innerHTML = "Please verify your first name.";
+							valid = false;
+						}
+						
+						else{
+							document.getElementById("fnameErr").innerHTML = "";
+						}
+						
+						if(checkletter(mname)==false){
+							document.getElementById("mnameErr").innerHTML = "Please verify your middle name.";
+							valid = false;
+						}
+						
+						else{
+							document.getElementById("mnameErr").innerHTML = "";
+						}
+						
+						if(checkletter(lname)==false){
+							document.getElementById("lnameErr").innerHTML = "Please verify your last name.";
+							valid = false;
+						}
+						
+						else{
+							document.getElementById("lnameErr").innerHTML = "";
+						}
+						
+						/*if(!(male.checked)&&!(female.checked)){
+							document.getElementById("genderErr").innerHTML = "Please verify your gender.";
+							valid = false;
+					    }
+						
+						else{
+							document.getElementById("genderErr").innerHTML = "";
+						}*/
+						
+					    
+						if(month!=""&&day!=""&&year!=""){
+								if(isNaN(month)||isNaN(day)||isNaN(year)){
+									document.getElementById("birthErr").innerHTML = "Please verify your birthday.";
+									valid = false;
+								 }
+								 
+							else{
+								if(month==4||month==6||month==9||month==11){
+									if(day>30){			
+										//echo "Invalid date! Please enter your correct birth date.";
+										document.getElementById("birthErr").innerHTML = "Please verify your birthday.";
+										valid = false;
+									}
+								}
+								else{
+									document.getElementById("birthErr").innerHTML = "";
+								 }
+								if(year%4==0&&day>29){
+									//echo "Invalid date! Please enter your correct birth date.";
+									document.getElementById("birthErr").innerHTML = "Please verify your birthday.";
+									valid = false;
+								}	
+								else{
+									document.getElementById("birthErr").innerHTML = "";
+								 }
+								if(year%4!=0&&day>28){
+									document.getElementById("birthErr").innerHTML = "Please verify your birthday.";
+									valid = false;		
+								}
+								else{
+									document.getElementById("birthErr").innerHTML = "";
+								 }
+							}
+						}
+						
+						if (email!="" && (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length)){
+						    document.getElementById("emailErr").innerHTML = "Please verify your email address.";
+							valid = false;	
+				      	}
+						else{
+							document.getElementById("emailErr").innerHTML = "";
+						 }
+						 
+						 /*if(contact==""){
+							document.getElementById("contactErr").innerHTML = "Please verify your contact number.";
+							valid = false;	
+						 }
+						 
+						 else{
+							document.getElementById("contactErr").innerHTML = "";
+						 }*/
+						if(valid == false){
+							return false;
+						}
+						else{
+							var confirmation = confirm('Please confirm updating personal information.');
+							if(confirmation == false){
+								return false
+							}
+						}
+						
+
+		}
+
+		function confirmCancel_update(){
+			//var cancel_form = document.forms["cancel_form"]["cancel"].value;
+			var confirmation = confirm('Are you sure you want to cancel updating information?');
+			if(confirmation == false){
+				return false;
+			}
+		}
+
+		function checkletter(field){
+			    var counter = 0;
+			    var alphabet = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
+			    for(var i=0; i<field.length; i++){
+					for(var j=0; j<54; j++){
+						if(field.charAt(i)==alphabet.charAt(j)||field.charAt(i)==" "){
+							    counter++;
+						}
+					}
+				}
+				if(counter<field.length){
+					return false;
+				}
+		}
+
+		function checkTransfer(){
+				var amount = document.forms["transferFund_form"]["amount"].value;
+				var valid = true;
+				if(isNaN(amount)||amount==""){
+					alert('Invalid amount');
+					valid = false;
+				}
+				if(valid == false){
+							return false;
+				}
+				else{
+					var confirmation = confirm('Are you sure you want to transfer funds?');
+					if(confirmation == false){
+						return false
+					}
+				}
+		}

@@ -4,6 +4,7 @@
 	$username="";
 	if(isset($_POST['login'])){
 			$username = $_POST['username'];
+			$encryptedPW = md5(md5($_POST['password']));
 			$conn = oci_connect('guestbank', 'kayato1');	
 			$stid = oci_parse($conn,
 					'SELECT COUNT(*) AS NUM_ROWS
@@ -13,7 +14,7 @@
 
 			oci_define_by_name($stid, 'NUM_ROWS', $num_rows);
 			oci_bind_by_name($stid, ':username', $_POST['username']);
-			oci_bind_by_name($stid, ':password', md5(md5($_POST['password'])));
+			oci_bind_by_name($stid, ':password', $encryptedPW);
 			oci_execute($stid);
 			oci_fetch($stid);
 

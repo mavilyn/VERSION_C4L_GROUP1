@@ -107,9 +107,24 @@
 			<?php
 
 				$conn = oci_connect("guestbank", "kayato1");
-		
-				$query = 'select * from addaccntconnect_request where appDisFlag IS NULL';
+						
+					$empid = $_SESSION['admin']->get_empid();
+				
+				//	$connMain = oci_connect("mainbank", "kayato1");
+					$query = 'select * from admins where empid=:empid';
+					$stid = oci_parse($conn, $query);
+					oci_bind_by_name($stid, ':empid', $empid);
+					oci_execute($stid, OCI_DEFAULT);
+
+					while ($row = oci_fetch_array($stid, OCI_BOTH)) {
+						$branchcode = $row[4];	
+					}	
+
+
+				$query = 'select * from addaccntconnect_request where appDisFlag IS NULL and accountnum IN (SELECT 
+					accountnum from client where branchcode = :adminbranch)';
 				$stid = oci_parse($conn, $query);
+				oci_bind_by_name($stid, ':adminbranch', $branchcode);
 				oci_execute($stid);
 				
 				if($stid == NULL){

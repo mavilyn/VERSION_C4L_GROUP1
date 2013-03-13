@@ -1,115 +1,112 @@
 <?php
 		include("class_lib.php");
 		session_start();
-		
-		$valid = false;
-		$fname = "";
-		$mname = "";
-		$lname = "";
-		$month = "";
-		$day = "";
-		$year = "";
-		$email = "";
-		$contact = "";
-		$spouse = "";
-		$mother = "";
-		$username = "";
-		$brgy= "";
-		$city= "";
-		$province= "";
-		$accountnum= "";
-		
+		/*************************************/
+		//initialize globals
+			$fname = "";
+			$mname = "";
+			$lname = "";
+			$month = "";
+			$day = "";
+			$year = "";
+			$email = "";
+			$contact = "";
+			$spouse = "";
+			$mother = "";
+			$tempusername = "";
+			$brgy= "";
+			$city= "";
+			$province= "";
+			$accountnum= "";
+		/******************************************/
 		if(isset($_POST['Submit'])){
-			$fname = $_POST['fname'];
-			$mname = $_POST['mname'];
-			$lname = $_POST['lname'];
-			$month = $_POST['month'];
-			$day = $_POST['day'];
-			$year = $_POST['year'];
-			$email = $_POST['email'];
-			$contact = $_POST['contact'];
-			$spouse = $_POST['spouse'];
-			$mother = $_POST['mother'];
-			$username = $_POST['username'];
-			$brgy = $_POST['brgy'];
-			$city = $_POST['city'];
-			$province = $_POST['province'];
-			//$code = $_POST['code'];
-			
-			$accountnum = $_POST['accountnum'];
-			$atmpin = md5(md5($_POST['atmpin']));
+			/**************************************/
+			//Variables for enrollment
+				$fname = $_POST['fname'];
+				$mname = $_POST['mname'];
+				$lname = $_POST['lname'];
+				$month = $_POST['month'];
+				$day = $_POST['day'];
+				$year = $_POST['year'];
+				$email = $_POST['email'];
+				$contact = $_POST['contact'];
+				$spouse = $_POST['spouse'];
+				$mother = $_POST['mother'];
+				$username = md5(md5($_POST['username']));
+				$password=md5(md5($_POST['password']));
+				$brgy = $_POST['brgy'];
+				$city = $_POST['city'];
+				$province = $_POST['province'];					
+				$gender=$_POST['gender'];
+				$civilstat=$_POST['civilstat'];
+				$secret= md5(md5($_POST['secret']));
+				$answer=md5(md5($_POST['answer']));
+				$activation = 1;
+				$accountnum = $_POST['accountnum'];
+				$atmpin = md5(md5($_POST['atmpin']));
+				$tempusername = $_POST['username'];
+			/**************************************/
 
-			$connGuest = oci_connect("guestbank", "kayato1");
-			
+			/**************************************/
+			//initialize connections
+				$connGuest = oci_connect("guestbank", "kayato1");
+				$connMain = oci_connect("mainbank", "kayato1");
+			/**************************************/
+
+			/******************************************************************/
+			//check if account is already listed in the online bank's accounts
 				$stid = oci_parse($connGuest,
 					'SELECT COUNT(*) AS NUM_ROWS
 					FROM client
-					WHERE accountnum = '.$accountnum
+					WHERE accountnum = :accountnum'
 				);
 				
+				oci_define_by_name($stid, 'NUM_ROWS', $num_rows);
+				oci_bind_by_name($stid, ':accountnum', $accountnum);
+				oci_execute($stid);
+				oci_fetch($stid);
+			/******************************************************************/
 
-			oci_define_by_name($stid, 'NUM_ROWS', $num_rows);
-			oci_execute($stid);
-			oci_fetch($stid);
-			
-			oci_close($connGuest);
-			
-			if($num_rows > 0) {
+			if($num_rows > 0) {		//if already enrolled
 				echo '<script type=text/javascript>alert("Account number is already registered in the Guestbank Online Solutions!");return false;</script>';
 			}
 			
-			else{
-				$connMain = oci_connect("mainbank", "kayato1");
-			
-				$stid2 = oci_parse($connMain,
-					'SELECT COUNT(*) AS NUM_ROWS2 FROM account
-					WHERE accountnum = '.$accountnum.'and atmpin = :atmpin'
-				);
+			else{		//if can enroll
+				/******************************************************************/
+				//check if is valid atmpin and accountnum	
 
-				oci_define_by_name($stid2, 'NUM_ROWS2', $num_rows2);
-				oci_bind_by_name($stid2, ':atmpin', $atmpin);
-				oci_execute($stid2);
-				oci_fetch($stid2);
-				
-				oci_close($connMain);
-				
-				if($num_rows2>0){
-						$connGuest = oci_connect("guestbank", "kayato1");
-					
-						$stid = oci_parse($connGuest,
-							"SELECT COUNT(*) AS NUM_ROWS3
-							FROM users
-							WHERE username = '".$username."'"
-						);
-						
-						oci_define_by_name($stid, 'NUM_ROWS3', $num_rows3);
-						oci_execute($stid);
-						oci_fetch($stid);
+					$stid2 = oci_parse($connMain,
+						'SELECT COUNT(*) AS NUM_ROWS2 FROM account
+						WHERE accountnum = :accountnum and atmpin = :atmpin'
+					);
+
+					oci_define_by_name($stid2, 'NUM_ROWS2', $num_rows2);
+					oci_bind_by_name($stid2, ':atmpin', $atmpin);
+					oci_bind_by_name($stid2, ':accountnum', $accountnum);
+					oci_execute($stid2);
+					oci_fetch($stid2);
+				/******************************************************************/
+				if($num_rows2>0){		
+							/******************************************************************/
+							//check  if there is a duplicate username
+								$stid = oci_parse($connGuest,
+									"SELECT COUNT(*) AS NUM_ROWS3
+									FROM users
+									WHERE username = :username"
+								);
+								oci_define_by_name($stid, 'NUM_ROWS3', $num_rows3);
+								oci_bind_by_name($stid, ':username', $username);
+								oci_execute($stid);
+								oci_fetch($stid);
+							/******************************************************************/
+
 						if($num_rows3>0){
 							echo "<script>alert('Username already exist. Please choose another username.');</script>";
 						}
-						else{
-										$username = $_POST['username'];
-										$password=md5(md5($_POST['password']));
-										$accountnum= $_POST['accountnum'];
-										$fname=$_POST['fname'];
-										$mname=$_POST['mname'];
-										$lname=$_POST['lname'];
-										$gender=$_POST['gender'];
-										$civilstat=$_POST['civilstat'];
-										$email=$_POST['email'];
-										$contact= $_POST['contact'];
-										$spouse=$_POST['spouse'];
-										$mother=$_POST['mother'];
-										$secret= md5(md5($_POST['secret']));
-										$answer=md5(md5($_POST['answer']));
-										$activation = 1;
-
-							$connGuest = oci_connect("guestbank", "kayato1");
+						else{		//VALID Enrollment, insert in the database 
 							$birthday = $_POST['month']."-".$_POST['day']."-".$_POST['year'];
 							$homeaddress = $_POST['brgy'].", ".$_POST['city'].", ".$_POST['province'];
 										
-										$connMain = oci_connect("mainbank", "kayato1");
 										$query = 'select * from account where accountnum=:accountnum';
 										$stid = oci_parse($connMain, $query);
 										oci_bind_by_name($stid, ':accountnum', $accountnum);
@@ -119,13 +116,18 @@
 											$branchcode = $row[5];	
 										}	
 										
+										/******************************************************************/
+										//insert at "users" table
 										$stid4 = oci_parse($connGuest,
 										'INSERT INTO users VALUES(:username, :password,'."'client'".')'
 												);
 										oci_bind_by_name($stid4, ':username', $username);
 										oci_bind_by_name($stid4, ':password', $password);
 										oci_execute($stid4);
+										/******************************************************************/
 
+										/******************************************************************/
+										//insert at "client" table
 										$stmt = 'INSERT INTO client VALUES(:username, :password, :accountnum, :fname, :mname, :lname, :gender, :homeaddress, :civilstat, :birthday, :email, :contact, :spouse, :mother, :secret, :answer, :activation, :branchcode)';
 										$stid3 = oci_parse($connGuest, $stmt);
 										oci_bind_by_name($stid3, ':username', $username);
@@ -147,16 +149,19 @@
 										oci_bind_by_name($stid3, ':branchcode', $branchcode);
 										oci_bind_by_name($stid3, ':activation', $activation);
 										oci_execute($stid3);
-							
-										
-										oci_close($connGuest);
-										
+										/******************************************************************/
+								
 										$_SESSION['loginclient']=1;
 										$_SESSION['client'] = new Client($_POST['fname'],$_POST['lname'],$_POST['accountnum'],$_POST['username'],md5(md5($_POST['password'])));
 										$_SESSION['new'] = 1;
-										
+
+										/****************************************/	
+										//close connections
+										oci_close($connGuest);
+										oci_close($connMain);
+										/****************************************/
+
 										header("Location: client_home.php");
-										
 										exit;
 						}
 				}
@@ -176,11 +181,12 @@
 	<head>
 		<title>	Enroll me! </title>
 		<script type="text/javascript" src="onlinebank.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	</head>
 	<body>
 		
 		<?php 
-		if($valid == false){
+		//if(!isset($_SESSION['loginadmin'])&&!isset($_SESSION['loginclient'])){
 			?>
 			<form name = "enroll_form" method ="post" action = "#" onSubmit="return checkEnroll();">
 			  <!----> 
@@ -195,9 +201,6 @@
 			*** ATM Pin: <input type = "password" name="atmpin" maxlength="4">
 			<span id="atmpinErr" style="color:red;font-weight:bold;"></span>		
 			<br />
-			<!--*** Code: <input type = "text" name="code" maxlength="4">
-			<span id="atmpinErr" style="color:red;font-weight:bold;"></span>	
-			<br />-->
 			<br /> <br />
 			<b><i>Second Step --- Enter your personal information</i></b>
 			<br /> <br />
@@ -235,7 +238,7 @@
 					<input type="text" name="year" min="1900" max="2100" placeholder="YYYY" value="<?php echo $year;?>"/>
 					<span id="birthErr" style="color:red;font-weight:bold;"></span>	
 					<br />
-			Email Address: <input type="text" name="email" maxlength="50" value="<?php echo $email;?>"/> 
+			*** Email Address: <input type="text" name="email" maxlength="50" value="<?php echo $email;?>"/> 
 					<span id="emailErr" style="color:red;font-weight:bold;"></span>	
 					<br />
 			Contact Number: <input type="text" name="contact" maxlength="50" value="<?php echo $contact;?>"/> 
@@ -250,7 +253,7 @@
 			<br /> <br />
 			<b><i>Third Step --- Enter your online account's information</b></i>
 			<br /> <br />
-			*** Username: <input type="text" name="username" maxlength="20" value="<?php echo $username;?>"/> 
+			*** Username: <input type="text" name="username" maxlength="20" value="<?php echo $tempusername;?>"/> 
 					<span id="usernameErr" style="color:red;font-weight:bold;"></span>
 					<br />
 			*** Password: <input type="password" name="password" maxlength="20"/> 
@@ -279,7 +282,7 @@
 				<input type="submit" name="Cancel" value="Cancel" />
 		</form>
 		<?php 
-		}
+		//}//else header('Location: login.php');
 		?>
 	</body>
 </html>

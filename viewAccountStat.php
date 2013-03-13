@@ -10,7 +10,8 @@
 		<script type="text/javascript" src="onlinebank.js"></script>
 	</head>
 	<body>
-	<?php if(isset($_SESSION['loginclient'])){ echo "Welcome ".$_SESSION['client']->get_username();
+	<?php if(isset($_SESSION['loginclient'])){
+		echo "Welcome ".$_SESSION['client']->get_fname()." ".$_SESSION['client']->get_lname();
 
 		$conn = oci_connect("guestbank", "kayato1");
 		

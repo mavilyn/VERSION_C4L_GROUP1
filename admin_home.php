@@ -37,7 +37,7 @@
 	</head>
 	<body>
 <?php if(isset($_SESSION['loginadmin'])){
-echo "Welcome ".$_SESSION['admin']->get_username();?>
+echo "Welcome Employee ".$_SESSION['admin']->get_empid();?>
 <form name= "taas" action="#" method = "POST" >
 	<input type="submit" name="logoutadmin" value="Log Out Admin" />
 	<input type="submit" name="changepassword" value="Change Password" />

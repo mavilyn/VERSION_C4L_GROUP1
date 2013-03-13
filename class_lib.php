@@ -52,8 +52,9 @@
 		var $password;
 		var $empid;
 		var $mgrflag;
+		var $branchcode;
 	
-		function Admin($username, $password, $empid, $mgrflag){
+		function Admin($username, $password, $empid, $mgrflag, $branchcode){
 			$this->set_username($username);
 			$this->set_password($password);
 			$this->set_mgrflag($mgrflag);
@@ -76,6 +77,9 @@
 			$this->mgrflag=$mgrflag;
 		}
 		
+		function set_branchcode($branchcode){
+			$this->branchcode=$branchcode;
+		}
 		//getter
 		function get_username(){
 			return $this->username;
@@ -88,6 +92,9 @@
 		}
 		function get_mgrflag(){
 			return $this->mgrflag;
+		}
+		function get_branchcode(){
+			return $this->branchcode;
 		}
 	}
 	

@@ -75,7 +75,9 @@
 		<script type="text/javascript" src="onlinebank.js"></script>
 	</head>
 	<body>
-	<?php if(isset($_SESSION['loginclient'])){ echo "Welcome ".$_SESSION['client']->get_username()?>
+	<?php if(isset($_SESSION['loginclient'])){
+		echo "Welcome ".$_SESSION['client']->get_fname()." ".$_SESSION['client']->get_lname();
+	?>
 		<form name = "addBiller_form" method ="post" action = "addBiller.php" onsubmit="return checkAddBiller();">
 			Reference Number: <input type = "text" name="refnum" maxlength="11"/><span id="refNumErr" style="color: red"> </span><br/>
 			<?php

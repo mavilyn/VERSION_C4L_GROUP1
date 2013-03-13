@@ -71,9 +71,11 @@
 						while ($row = oci_fetch_array($stmt, OCI_BOTH)) {
 							$billeraccountnum=$row[0];
 						}*/
+
+						$connMain = oci_connect("mainbank", "kayato1");
 						
 						$query =  'INSERT into current_biller values(:accountnum, :billeraccountnum, :billername, :refnum)';
-						$compiled = oci_parse($conn, $query);
+						$compiled = oci_parse($connMain, $query);
 						oci_bind_by_name($compiled, ':accountnum', $accountnum);
 						oci_bind_by_name($compiled, ':billeraccountnum', $billeraccountnum);
 						oci_bind_by_name($compiled, ':billername', $billername);
@@ -98,7 +100,9 @@
 		<title>	Confirm Request </title>
 	</head>
 	<body>
-	<?php if(isset($_SESSION['loginadmin'])){ echo "Welcome".$_SESSION['admin']->get_username();?>
+	<?php if(isset($_SESSION['loginadmin'])){
+		echo "Welcome Employee ".$_SESSION['admin']->get_empid();
+	?>
 		<form name = "confirmRequest_form" method ="post" action = "confirmRequest.php">			
 			<?php
 

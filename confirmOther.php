@@ -54,45 +54,6 @@
 						oci_execute($sid);
 					
 						oci_close($conn);
-						  /*
-					
-						$query =  'SELECT accountnum FROM addaccntconnect_request where otheraccountnum = :otheraccountnum';
-						$compiled = oci_parse($conn, $query);
-						oci_bind_by_name($compiled, ':otheraccountnum', $approve);
-						oci_execute($compiled);
-						$accountnum = oci_fetch_array($compiled, OCI_RETURN_NULLS+OCI_ASSOC);
-						
-						$query =  'SELECT * FROM addaccntconnect_request where otheraccountnum = :otheraccountnum';
-						$compiled = oci_parse($conn, $query);
-						oci_bind_by_name($compiled, ':otheraccountnum', $approve);
-						oci_execute($compiled);*/
-						/*$billername = oci_fetch_array($compiled, OCI_RETURN_NULLS+OCI_ASSOC);
-						
-						foreach ($accountnum as $acctnum){
-							foreach ($billername as $biller){
-								
-							}
-						}*/
-						
-				/*	while ($row = oci_fetch_array($compiled, OCI_BOTH)) {
-							$preferred=$row[2];							//check this
-							$otheraccountnum=$row[1];
-							$acctnum=$row[0];
-						}
-						
-						$query =  'INSERT into accountconnected values(:accountnum, :otheraccountnum, :preferredname)';
-						$compiled = oci_parse($conn, $query);
-						oci_bind_by_name($compiled, ':accountnum', $acctnum);
-						oci_bind_by_name($compiled, ':otheraccountnum', $otheraccountnum);
-						oci_bind_by_name($compiled, ':preferredname', $preferred);
-						oci_execute($compiled);
-						
-								
-						$aquery = 'DELETE from ADDACCNTCONNECT_REQUEST where otheraccountnum = :otheraccountnum';
-						$sid = oci_parse($conn, $aquery);
-						oci_bind_by_name($sid, ':otheraccountnum', $approve);
-						oci_execute($sid);
-	*/
 					}
 				}
 			}				
@@ -102,7 +63,9 @@
 		<title>	Confirm Request </title>
 	</head>
 	<body>
-	<?php if(isset($_SESSION['loginadmin'])){ echo "Welcome".$_SESSION['admin']->get_username();?>
+	<?php if(isset($_SESSION['loginadmin'])){
+		echo "Welcome Employee ".$_SESSION['admin']->get_empid();
+	?>
 		<form name = "confirmOther_form" method ="post" action = "confirmOther.php">			
 			<?php
 

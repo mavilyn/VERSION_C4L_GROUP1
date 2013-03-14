@@ -94,6 +94,9 @@
 		<script type="text/javascript" src="onlinebank.js"></script>
 	</head>
 	<body>
+	<?php if(isset($_SESSION['loginadmin'])){
+		echo "Welcome ".$_SESSION['admin']->get_username();
+	?>
 		<form name = "removeAdmin_form" method ="post" action = "removeAdmin.php" onsubmit="return checkRemove();">
 			<?php
 				/*$conn = oci_connect("guestbank", "kayato1");
@@ -127,6 +130,7 @@
 			Enter Employee ID <input type="text" name="empid"/> <br />
 			<input type="submit" name="Submit" value="Remove Administrator" />	
 		</form>
+		<?php } else header('Location: login.php');?>
 	</body>
 </html
 

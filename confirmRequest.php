@@ -71,9 +71,11 @@
 						while ($row = oci_fetch_array($stmt, OCI_BOTH)) {
 							$billeraccountnum=$row[0];
 						}*/
+
+						$connMain = oci_connect("mainbank", "kayato1");
 						
 						$query =  'INSERT into current_biller values(:accountnum, :billeraccountnum, :billername, :refnum)';
-						$compiled = oci_parse($conn, $query);
+						$compiled = oci_parse($connMain, $query);
 						oci_bind_by_name($compiled, ':accountnum', $accountnum);
 						oci_bind_by_name($compiled, ':billeraccountnum', $billeraccountnum);
 						oci_bind_by_name($compiled, ':billername', $billername);
@@ -96,9 +98,12 @@
 <html>
 	<head>
 		<title>	Confirm Request </title>
+		<script type="text/javascript" src="onlinebank.js"></script>
 	</head>
 	<body>
-	<?php if(isset($_SESSION['loginadmin'])){ echo "Welcome".$_SESSION['admin']->get_username();?>
+	<?php if(isset($_SESSION['loginadmin'])){
+		echo "Welcome ".$_SESSION['admin']->get_username();
+	?>
 		<form name = "confirmRequest_form" method ="post" action = "confirmRequest.php">			
 			<?php
 
@@ -138,13 +143,14 @@
 				print'<th>Approve'; echo'</th>';
 				print'<th>Disapprove'; echo'</th>';
 				echo '</tr>';
-						
+						$count = 0;
 				while ($row = oci_fetch_array($stid, OCI_BOTH)) {
 
 							$accountnum=$row[0];
 							$billeraccountnum=$row[1];
 							$billername=$row[2];
 							$ref=$row[3];
+
 						
 					print '<tr>';
 					//foreach ($row as $item) {
@@ -154,12 +160,13 @@
 						print'<td>'.$row[3]; echo'</td>';
 					//}
 					print '<td>';
-					print '<input type="checkbox" name="approved[]" value="'.$row[0].' '.$row[1].' '.$row[3].' '.$row[2].'"/>';
+					print '<input type="checkbox" id="approve'.$count.'" name="approved[]" value="'.$row[0].' '.$row[1].' '.$row[3].' '.$row[2].'" onclick =  "return disableDisapprove();"/>';
 					echo '</td>';
 					print '<td>';
-					print '<input type="checkbox" name="disapproved[]" value="'.$row[0].' '.$row[1].' '.$row[3].'"/>';
+					print '<input type="checkbox" id="disapprove'.$count.'" name="disapproved[]" value="'.$row[0].' '.$row[1].' '.$row[3].'" onclick =  "return  disableApprove();"/>';
 					echo '</td>';
 					echo '</tr>';
+					$count++;
 				}
 				print '</table>';?>
 			<input type="submit" name="Submit" value="Submit" />	

@@ -3,19 +3,25 @@
 		session_start();
 		$empid = "";
 		if(isset($_POST['Submit'])){
-			$empid = $_POST['empid'];
-			$connGuest = oci_connect("guestbank", "kayato1");
 			
-				$stid = oci_parse($connGuest,
-					'SELECT COUNT(*) AS NUM_ROWS
-					FROM admins
-					WHERE empid = '.$empid
-				);
+			$empid = $_POST['empid'];
+			$username = $_POST['username'];
+			$password = $_POST['password'];
+			$confirmpassword = $_POST['confirmpassword'];
 
-			oci_define_by_name($stid, 'NUM_ROWS', $num_rows);
-			oci_execute($stid);
-			oci_fetch($stid);
-			oci_close($connGuest);
+			/*****************************************************/
+			//check whether administrator is on the 
+				$connGuest = oci_connect("guestbank", "kayato1");
+					$stid = oci_parse($connGuest,
+						'SELECT COUNT(*) AS NUM_ROWS
+						FROM admins
+						WHERE empid = '.$empid
+					);
+				oci_define_by_name($stid, 'NUM_ROWS', $num_rows);
+				oci_execute($stid);
+				oci_fetch($stid);
+				oci_close($connGuest);
+			/******************************************************/
 			if($num_rows > 0) {
 				echo '<script type=text/javascript>alert("Employee already has an online account!");</script>';
 			}
@@ -133,7 +139,8 @@
 	</head>
 	<body>
 		<?php if(isset($_SESSION['loginadmin'])){
-echo "Welcome ".$_SESSION['admin']->get_username();?>
+				echo "Welcome ".$_SESSION['admin']->get_username();
+			?>
 		<form name = "addadmin_form" method ="post" action = "add_admin.php" onsubmit="return check_addAdmin();">
 			Employee Number: <input type="text" maxlength="10" name="empid" value="<?php echo $empid;?>"/> 
 					<span id="empidErr" style="color:red;font-weight:bold;"></span>

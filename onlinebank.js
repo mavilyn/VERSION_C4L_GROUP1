@@ -634,3 +634,10 @@ function checkEnroll(){
 					}
 				}
 		}
+
+	function checkpaybill(){
+			var confirmation = confirm('Are you sure you want to transfer fund?');
+			if(confirmation == false){
+					return false
+			}
+	}		

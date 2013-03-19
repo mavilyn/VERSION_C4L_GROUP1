@@ -31,6 +31,7 @@ function checkEnroll(){
 							//document.write("Please verify your account number.");
 							document.getElementById("accountnumErr").innerHTML = "Please verify your account number.";
 							valid = false;
+							
 						}
 						else{
 							document.getElementById("accountnumErr").innerHTML = "";
@@ -202,7 +203,7 @@ function checkEnroll(){
 						
 						
 						if(answer==""){
-							document.getElementById("answerErr").innerHTML = "Please add answer to secret question.";
+							document.getElementById("answerErr").innerHTML = "Please supply an answer to secret question.";
 							valid = false;
 						}
 						
@@ -233,6 +234,7 @@ function checkEnroll(){
 									return false;
 								}
 						}
+						
 						
 }
 
@@ -616,6 +618,20 @@ function checkEnroll(){
 					return false;
 				}
 		}
+		
+		function disabledCheckBox(field){
+			field.disabled = true;
+		}
+		
+		function enabledCheckBox(field){
+			field.disabled = false;
+		}
+		
+		function checkboxChecked(){
+		function checkboxChecked(){
+			disabledCheckbox();
+			enabledCheckbox();
+		}
 
 		function checkTransfer(){
 				var amount = document.forms["transferFund_form"]["amount"].value;
@@ -634,10 +650,7 @@ function checkEnroll(){
 					}
 				}
 		}
+		
+		
 
-	function checkpaybill(){
-			var confirmation = confirm('Are you sure you want to transfer fund?');
-			if(confirmation == false){
-					return false;
-			}
-	}		
+		

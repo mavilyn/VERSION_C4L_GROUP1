@@ -114,6 +114,7 @@
 		<script type="text/javascript" src="scripts/jquery-1.8.1.min.js"></script>
 		<script src="scripts/jquery.nivo.slider.js" type="text/javascript"></script>
 		<script src="scripts/onlinebank.js" type="text/javascript"></script>
+		<script src="scripts/javascript_validation.js" type="text/javascript"></script>
 		
 		
 		<link type="text/css" href="stylesheets/jquery.jscrollpane.css" rel="stylesheet" media="all" />
@@ -177,7 +178,7 @@
 					
 					<div id="content_wrapper">
 						
-						<form name = "confirmRequest_form" method ="post" action = "billerrequests.php">			
+			<form name = "confirmRequest_form" method ="post" action = "billerrequests.php" onSubmit="return checkManageBiller();">			
 						<div class="scroll-pane-arrows2">
 						
 			<?php

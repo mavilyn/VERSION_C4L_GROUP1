@@ -77,6 +77,7 @@
 		
 		<script type="text/javascript" src="scripts/jquery-1.8.1.min.js"></script>
 		<script src="scripts/jquery.nivo.slider.js" type="text/javascript"></script>
+		<script type="text/javascript" src="scripts/javascript_validation.js"></script>
 		
 		<link type="text/css" href="stylesheets/jquery.jscrollpane.css" rel="stylesheet" media="all" />
 		<link type="text/css" href="stylesheets/jquery.jscrollpane.lozenge.css" rel="stylesheet" media="all" />
@@ -124,7 +125,7 @@
 		
 		
 		</div>
-		<form name = "confirmOther_form" method ="post" action = "account_connections.php">	
+		<form name = "confirmOther_form" method ="post" action = "account_connections.php" onSubmit="checkManageAccount();">	
 		<div id="body">
 			
 			<div id="body_center">

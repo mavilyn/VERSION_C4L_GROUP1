@@ -32,8 +32,6 @@
 				<script>
 					$(document).ready(function()
 					{
-						$( "#loginErr" ).text( "Invalid username or password." );
-					  	$( "#loginErr" ).fadeOut();
 					  	$( "#loginErr" ).fadeIn();
 					 });
 				</script>
@@ -105,8 +103,6 @@
 						?><script>
 							$(document).ready(function()
 							{
-								$( "#loginErr" ).text( "Invalid username or password." );
-							  	$( "#loginErr" ).fadeOut();
 							  	$( "#loginErr" ).fadeIn();
 							 });
 						</script>
@@ -227,7 +223,13 @@
 					<div id="login_body">
 					<form name="loginform" action="#" method="post" >
 					<div id="form_wrapper">
-						<span id="loginErr" style="color:red;font-weight:bold;"></span>		
+						<script>
+							$(function()
+							{
+								$( "#loginErr" ).hide();			
+							 });
+						</script>
+						<p id="loginErr" style="color:red;font-weight:bold; font-size: 15px;">Invalid username or password.</p>		
 						<label for="username">Username</label>
 						<br />
 						<input type="text" id="username" name="username" value="<?php echo $username;?>"/>
@@ -303,8 +305,6 @@
 					<script>
 					$(document).ready(function()
 					{
-						$( "#loginErr" ).text( "Invalid username or password." );
-					  	$( "#loginErr" ).fadeOut();
 					  	$( "#loginErr" ).fadeIn();
 					 });
 					</script>

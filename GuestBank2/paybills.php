@@ -318,37 +318,6 @@
 								echo '</td>';
 							echo '</tr>';
 							
-							print '<tr>';
-								print'<td class="ac_data">'.$row[0]; echo'</td>';
-								print'<td class="ac_data">'.$row[2]; echo'</td>';
-								print'<td class="ac_data">'.$row[3]; echo'</td>';
-								print'<td class="ac_data">'.$row[4]; echo'</td>';
-								print '<td class="ac_data">';
-								print '<input type="submit" name="paybills" value="Pay Bill" class="pb_submit"/>';
-								print '<input type="hidden" name="servicenum" value="'.$servicenum.'"/>';
-								echo '</td>';
-							echo '</tr>';
-							print '<tr>';
-								print'<td class="ac_data">'.$row[0]; echo'</td>';
-								print'<td class="ac_data">'.$row[2]; echo'</td>';
-								print'<td class="ac_data">'.$row[3]; echo'</td>';
-								print'<td class="ac_data">'.$row[4]; echo'</td>';
-								print '<td class="ac_data">';
-								print '<input type="submit" name="paybills" value="Pay Bill" class="pb_submit"/>';
-								print '<input type="hidden" name="servicenum" value="'.$servicenum.'"/>';
-								echo '</td>';
-							echo '</tr>';
-							print '<tr>';
-								print'<td class="ac_data">'.$row[0]; echo'</td>';
-								print'<td class="ac_data">'.$row[2]; echo'</td>';
-								print'<td class="ac_data">'.$row[3]; echo'</td>';
-								print'<td class="ac_data">'.$row[4]; echo'</td>';
-								print '<td class="ac_data">';
-								print '<input type="submit" name="paybills" value="Pay Bill" class="pb_submit"/>';
-								print '<input type="hidden" name="servicenum" value="'.$servicenum.'"/>';
-								echo '</td>';
-							echo '</tr>';
-							
 							
 							}
 					

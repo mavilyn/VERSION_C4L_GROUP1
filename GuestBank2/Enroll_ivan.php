@@ -32,16 +32,8 @@
 	<body>
 	
 	<div id="top">
-		
-			<div id="top_upper">
-			</div>
-			<div id="top_lower">
-			</div>
 			
 			<div id="top_center">
-			
-				
-				
 				<div id="logo" onclick="location.href='index.php';" style="cursor: pointer;">
 					<img id="logo_img" src="images/logo_small.png" alt ="" />
 				</div>
@@ -80,16 +72,14 @@
 					</div>
 				</div>
 				
-				<div id="top_upper_inside">
-				
-				</div>
+			</div>
 			
-				<div id="top_lower_inside">
-				</div>
+			<div id="top_upper">
 				
 			</div>
 			
-			
+			<div id="top_lower">
+			</div>
 		
 		</div>
 	
@@ -458,16 +448,15 @@ I hereby certify to have read and understood the foregoing terms & conditions.  
 					</div>
 					<script type="text/javascript">
 					
-					$(function()
-{
-	$('.scroll-pane').jScrollPane();
-	$('.scroll-pane-arrows').jScrollPane(
-		{
-			showArrows: true,
-			horizontalGutter: 10
-		}
-	);
-});
+					$(function{
+						$('.scroll-pane').jScrollPane();
+						$('.scroll-pane-arrows').jScrollPane(
+						{
+							showArrows: true,
+							horizontalGutter: 10
+						}
+						);
+						});
 	
 		
 					</script>

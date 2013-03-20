@@ -1,19 +1,20 @@
 <?php
 	include("class_lib.php");
+	
 	session_start();
 	
-	$username = "";
-	
+	//code for handling login
 	if(isset($_POST['login'])){
-		$conn = oci_connect('guestbank', 'kayato1');
-
-		/*********************************************/
-		//variable declarations
-			$username = $_POST['username'];
-			$encryptedPW = md5(md5($_POST['password']));
-		/*********************************************/
-		/***********************************************************/
-		//check if correct login credentials by tracking through $num_rows	
+		
+		if($_POST['username']==NULL || $_POST['password'] == NULL){
+		?>
+			<script>
+				alert("Do not leave the username or password null.");
+			</script>
+		<?php
+		}
+		else{
+			$conn = oci_connect('guestbank', 'kayato1');	
 			$stid = oci_parse($conn,
 					'SELECT COUNT(*) AS NUM_ROWS
 					FROM users
@@ -21,36 +22,37 @@
 				);
 
 			oci_define_by_name($stid, 'NUM_ROWS', $num_rows);
-			oci_bind_by_name($stid, ':username', $username);
-			oci_bind_by_name($stid, ':password', $encryptedPW);
+			oci_bind_by_name($stid, ':username', $_POST['username']);
+			$encrypt = md5(md5($_POST['password']));
+			echo $encrypt;
+			oci_bind_by_name($stid, ':password', $encrypt);
 			oci_execute($stid);
 			oci_fetch($stid);
-		/***********************************************************/
+
 			
 			if($num_rows == 0){
 				?>
-				<script>
-					alert("Username and password did not match");
-				</script>
+				
 				<?php
 			}							
 			else{
-				/******************************************************/
-				//distinguish type if administrator or client
 				$query='select * from users where username = :username';
 				$parsedQuery = oci_parse($conn, $query);
-				oci_bind_by_name($parsedQuery, ':username', $username);
+				oci_bind_by_name($parsedQuery, ':username', $_POST['username']);
 				oci_execute($parsedQuery);
+				/*$parsedQuery=($conn, 'select * from users where username = :username');
+				oci_bind_by_name($parsedQuery, ':username', $_POST['username']);
+				oci_execute($parsedQuery);
+				*/
 
 				while ($row = oci_fetch_array($parsedQuery, OCI_BOTH)) {
 						$type=$row[2];
 				}
-				/******************************************************/
-
+				
 				if($type == 'admin'){
 					$sql='select * from admins where username = :username';
 					$stmt = oci_parse($conn, $sql);
-					oci_bind_by_name($stmt, ':username', $username);
+					oci_bind_by_name($stmt, ':username', $_POST['username']);
 					oci_execute($stmt, OCI_DEFAULT);
 
 					while ($row = oci_fetch_array($stmt, OCI_BOTH)) {
@@ -58,49 +60,45 @@
 						$password=$row[1];
 						$empid=$row[2];
 						$mgrflag=$row[3];
-						$branchcode=$row[4];
 					}
 					
-					/*****************************************************************************/
-						//initialize admin session, go to admin_home
-						$_SESSION['loginadmin']=1;
-						$_SESSION['admin'] = new Admin($username,$password,$empid,$mgrflag,$branchcode);
+					
+					$_SESSION['loginadmin']=1;
+					$_SESSION['admin'] = new Admin($username,$password,$empid,$mgrflag);
+					
+					header("Location: admin_home.php");
 						
-						header("Location: admin_home.php");
-						exit;
-					/*****************************************************************************/
+					exit;
 				}
 				else{
-
 					$sql='select * from client where username = :username';
 					$stmt = oci_parse($conn, $sql);
-					oci_bind_by_name($stmt, ':username', $username);
+					oci_bind_by_name($stmt, ':username', $_POST['username']);
 					oci_execute($stmt, OCI_DEFAULT);
 
 					while ($row = oci_fetch_array($stmt, OCI_BOTH)) {
 						$fname=$row[3];
-						$mname=$row[4];
 						$lname=$row[5];
 						$accountnum=$row[2];
 						$username=$row[0];
 						$password=$row[1];
 					}
 					
-					oci_close($conn);		//close connection
-
-					/*****************************************************************************/
-					//initialize admin session, go to client_home
+					oci_close($conn);
+					
 					$_SESSION['loginclient']=1;
-					$_SESSION['client'] = new Client($fname,$lname,$mname,$accountnum,$username,$password);
+					$_SESSION['client'] = new Client($fname,$lname,$accountnum,$username,$password);
 					
 					header("Location: client_home.php");
-					/*****************************************************************************/
+					
 					exit;
 				}
+				//$username = $_POST['username'];
+				
 			}
+		}
 	}
 ?>
-
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -123,17 +121,10 @@
 	</head>
 
 	<body>
+		<div id="daya">
 		<div id="top">
-		
-			<div id="top_upper">
-			</div>
-			<div id="top_lower">
-			</div>
 			
 			<div id="top_center">
-			
-				
-				
 				<div id="logo" onclick="location.href='index.php';" style="cursor: pointer;">
 					<img id="logo_img" src="images/logo_small.png" alt ="" />
 				</div>
@@ -172,16 +163,14 @@
 					</div>
 				</div>
 				
-				<div id="top_upper_inside">
-				
-				</div>
+			</div>
 			
-				<div id="top_lower_inside">
-				</div>
+			<div id="top_upper">
 				
 			</div>
 			
-			
+			<div id="top_lower">
+			</div>
 		
 		</div>
 		
@@ -216,7 +205,7 @@
 						<br />
 						<input type="password" id="password" name="password"/>
 						<br />
-						<input type="submit" id="login_button" name="login" value="Login"/>
+						<input type="submit" src="images/loginbutton.png" id="login_button" name="login" />
 						<br />
 						<br />
 						<p class="form_text">Don't have an online account? <br />Click <a id="enroll_link" href="Enroll.php">here</a> to enroll.</p>

@@ -27,14 +27,10 @@
     		$mail->Body    = $body; 
 			
 			
-	if(!$mail->Send()){
-		return false;
-		//echo "Mailer Error: " . $mail->ErrorInfo . "<br>";
-		}
-    else{
-		return true;
+	if(!$mail->Send())
+		echo "Mailer Error: " . $mail->ErrorInfo . "<br>";
+    else
         echo "Message has been sent<br>";
-		}
 		}
 	
 ?>

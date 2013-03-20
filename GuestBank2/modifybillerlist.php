@@ -24,7 +24,7 @@
 	}
 	
 	function display_billerlist(){
-		$conn = oci_connect('mainbank', 'kayato1');
+		$conn = oci_connect('guestbank', 'kayato1');
 		$query='select * from billerlist';
 		$parsedQuery = oci_parse($conn, $query);
 		oci_execute($parsedQuery);

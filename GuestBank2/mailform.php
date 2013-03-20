@@ -1,73 +1,50 @@
 <?php
+	session_start();
 	
 	include("class_lib.php");
 	include("email.php");
 	
-	session_start();
+	
+	echo $_SESSION['client']->get_username();
 	
 	
 	if(isset($_POST['send'])){
-		
-		$username = $_SESSION['client']->get_username();
-		$conn = oci_connect('guestbank', 'kayato1');
-		$query='select email from client where username=:username';
+		/*
+		$conn = oci_connect('mainbank', 'kayato1');
+		$query='select * from billerlist';
 		$parsedQuery = oci_parse($conn, $query);
-		oci_bind_by_name($parsedQuery, ':username', $username);
-		
 		oci_execute($parsedQuery);
-		
 		while ($row = oci_fetch_array($parsedQuery, OCI_BOTH)) {
-			$email = $row[0];
+			echo $row[1]."&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+			//echo "<a href='removefrombillerlist.php?accountnum=".$row[0]."'>Remove</a><br />";
+			echo "<input type='button' value='Remove' onclick= 'removebiller(".$row[0].",".'"'.$row[1].'"'.");' />";
 			
-			}
-		
-		$name = $_SESSION['client']->get_fname()." ".$_SESSION['client']->get_lname()." - ".$email;
+			echo "<br />";
+		}
+		*/
 	
-		$sent = sendEmail($name, $_POST['subject'], $_POST['body']);
-		
-		if($sent){
-			echo "<script type='text/javascript'>"."alert('Your email was sent.');"."</script>";
-		}
-		else{
-				echo "<script type='text/javascript'>"."alert('Your email was not sent.');"."</script>";
-		
-		}
-		
+		//sendEmail($_SESSION['client']->username, $_POST['subject'], $_POST['body']);
+	
 	}
 ?>
 
 <html>
 	<head>
 		<title> Guestbank OBS | Send Email</title>
-		<script type="text/javascript">
-			function validate_mail(){
-				
-				if((document.forms["mail_form"]["subject"].value=="") || (document.getElementById("field").value=="")){
-					alert("Email not sent. Please fill-up both fields.");
-					return false
-					}
-				else{
-				
-					return true;
-				}
-			}
-		
-		</script>
-		
 	</head>
 	<body>
-		<form name="mail_form" action="#" method="POST" onSubmit= "return validate_mail();">
+		<form name="mail_form" action="mailform.php" method="POST">
 		
 		Subject:
 		<br />
 		
-		<input type="text" name ="subject" id= "subject"/>
+		<input type="text" name ="subject" />
 		<br />
 		<br />
 		Body :
 		<br />
 		
-		<textarea name="body" id= "field"></textarea>
+		<textarea name="body"> </textarea>
 		
 		<input type="submit" name="send" value="Send" />
 		</form>

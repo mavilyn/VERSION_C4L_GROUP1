@@ -6,11 +6,13 @@
 		header('Location: destroy.php');
 		}
 		
-	if(isset($_POST['Submit'])){
+	/*if(isset($_POST['Submit'])){
 		if($_POST['operation']=="activate")
 			$opeFlag = 1;
 		else
 			$opeFlag = 0;
+
+
 			
 		$accountnum = $_POST['accountnum'];
 		$connGuest = oci_connect("guestbank", "kayato1");
@@ -39,7 +41,59 @@
 			oci_execute($stid3);
 			echo '<script type=text/javascript>alert("Account with account number ' .$accountnum.' is '.$_POST['operation'].'d")</script>';
 		}
-	}
+	}*/
+	if (isset($_POST['Submit'])) {
+				/************************************************/
+				//estbalish connections
+				$connGuest = oci_connect("guestbank", "kayato1");
+				//$connMain = oci_connect("mainbank", "kayato1");
+				/***********************************************/
+
+				$empid = $_SESSION['admin']->get_empid();
+				$accountnum =$_POST['accountnum'];
+				$op = $_POST['operation'];
+				if($_POST['operation']=="activate")
+					$activate = 1;
+				else
+					$activate = 0;
+
+					$query = 'select * from admins where empid=:empid';
+					$stid = oci_parse($connGuest, $query);
+
+					oci_bind_by_name($stid, ':empid', $empid);
+					oci_execute($stid, OCI_DEFAULT);
+
+					while ($row = oci_fetch_array($stid, OCI_BOTH)) {
+						$branchcode = $row[4];	
+					}
+
+				$query = 'select * FROM client where accountnum = :accountnum and accountnum IN (SELECT accountnum
+					from client where branchcode = :adminbranch)';
+				$stid = oci_parse($connGuest, $query);
+				oci_bind_by_name($stid, ':adminbranch', $branchcode);
+				oci_bind_by_name($stid, ':accountnum', $accountnum);
+				oci_execute($stid, OCI_DEFAULT);
+				$count = 0;
+					while ($row = oci_fetch_array($stid, OCI_BOTH)) {
+
+						if(isset($row[16])){
+									$parsed = oci_parse($connGuest, 'UPDATE client set activation = :activate where
+										accountnum=:accountnum ');
+										oci_bind_by_name($parsed, ':accountnum', $accountnum);
+										oci_bind_by_name($parsed, ':activate', $activate);
+									oci_execute($parsed);
+									echo '<script type=text/javascript>alert("Account with account number ' .$accountnum.' is '.$_POST['operation'].'d")</script>';
+									$count++;
+						}
+							
+					}
+
+					if($count==0){
+						echo '<script>alert("Account does not exits!");</script>';
+					}
+			
+			}				
+
 	
 	
 	
@@ -62,7 +116,7 @@
 		
 		<script type="text/javascript" src="scripts/jquery-1.8.1.min.js"></script>
 		<script src="scripts/jquery.nivo.slider.js" type="text/javascript"></script>
-		
+		<script src="scripts/javascript_validation.js" type="text/javascript"></script>
 	</head>
 
 	<body>
@@ -119,11 +173,11 @@
 					</div>
 					
 					<div id="content_wrapper">
-						<form name = "activation_form" method ="post" action = "aordaccounts.php" onSubmit="return checkActivation();">
+						<form name = "activation_form" method ="post" action = "aordaccounts.php" onSubmit="return checkActivate();">
 							<p id="anum_p">
+							<span id="accountnumErr" style="color:red;font-weight:bold;" class = "errSpan"></span><br />
 							<label class="label_2" for="anum">Account number:</label> 
-							<input type = "text" name="accountnum" maxlength="10" id="accountnum"/>
-							<span id="accountnumErr" style="color:red;font-weight:bold;"></span>	
+							<input type = "text" name="accountnum" maxlength="10" id="accountnum"/>	
 							</p>
 							<p id="aordbot_p">
 							<select name="operation" id = "operation">

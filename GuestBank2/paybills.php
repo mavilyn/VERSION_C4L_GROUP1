@@ -270,7 +270,7 @@
 						</div>
 						<div class="rule"></div>
 						<div id="pb_maincontent">
-							<form name = "paybill_form" method ="post" action = "#" onSubmit = "return checkpaybill();">
+							<form name = "paybill_form" method ="post" action = "#" >
 							
 							<?php
 				

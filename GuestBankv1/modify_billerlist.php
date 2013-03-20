@@ -6,6 +6,7 @@
 	$alreadyExist = false;
 	$successfulAdd = false;
 	$notExist = false;
+	$removeSuccess = false;
 
 	if (!(isset($_SESSION['loginadmin']) && $_SESSION['loginadmin'] != '')) {
 		header('Location: destroy.php');
@@ -13,6 +14,7 @@
 	
 	
 	function insert_biller($accountnum, $billername){
+
 		$conn = oci_connect('mainbank', 'kayato1');
 		$query='insert into billerlist values(:accountnum, :billername)';
 		$parsedQuery = oci_parse($conn, $query);
@@ -22,11 +24,11 @@
 		
 		if (!$good) {
 			$e = oci_error($parsedQuery);  // For oci_parse errors pass the connection handle
-			$alreadyExist = true;
+		
 			
 		}
 		else{
-				$successfulAdd = true;
+				
 		}
 		oci_commit($conn);
 		oci_free_statement($parsedQuery);
@@ -60,7 +62,7 @@
 		$exists = false;
 		while ($row = oci_fetch_array ($parsedQuery, OCI_BOTH)) {
 			if($row[0] == $_POST['accountnum']){
-				
+					$successfulAdd = true;
 				$exists = true;
 				insert_biller($_POST['accountnum'], $row[4]);
 				
@@ -175,13 +177,18 @@
 								}
 
 								if($successfulAdd == true){
-									echo "<script type='text/javascript'>alertify.success('Biller successfully added.');</script>";
-									$alreadyExist = false;		
+									echo "<script type='text/javascript'>alertify.success('Biller has been added.');</script>";
+									$successfulAdd = false;		
 								}
 
 								if($notExist == true){
 									echo "<script type='text/javascript'>alertify.error('Account does not exist.');</script>";
 									$notExist= false;		
+								}
+
+								if($removeSuccess == true){
+									echo "<script type='text/javascript'>alertify.success('Biller has been removed.');</script>";
+									$removeSuccess= false;		
 								}
 							
 							?>
@@ -242,6 +249,7 @@
 		function removebiller(accountnum,accountname){
 			var yes= confirm("Are you sure you want to remove "+accountname+"?");
 			if (yes){
+				$removeSuccess = true;
 				window.location = "removefrombillerlist.php?accountnum="+accountnum;
 
 			}

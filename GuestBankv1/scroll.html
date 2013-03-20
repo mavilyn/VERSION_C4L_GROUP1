@@ -1,0 +1,48 @@
+<html>
+<head>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.min.js"></script>
+
+<link type="text/css" href="stylesheets/jquery.jscrollpane.css" rel="stylesheet" media="all" />
+<link type="text/css" href="stylesheets/jquery.jscrollpane.lozenge.css" rel="stylesheet" media="all" />
+<script type="text/javascript" src="scripts/jquery.jscrollpane.min.js"></script>
+<script type="text/javascript" src="scripts/jquery.mousewheel.js"></script>
+
+<style>
+
+	.scroll-pane, .scroll-pane-arrows{
+		width: 300px;
+		height: 300px;
+		
+		float: left;
+	margin: auto;
+	overflow: auto;
+	
+	}
+</style>
+</head>
+<body>
+<div class="scroll-pane">
+ <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean tempus, magna sit amet accumsan tristique, ipsum magna imperdiet ipsum, non viverra eros urna in mi. Quisque lorem quam, aliquet non tempor eget, vulputate a leo. Integer leo quam, rutrum sit amet viverra et, elementum at nunc. Donec sed enim risus. Etiam porttitor vehicula venenatis. Morbi feugiat suscipit scelerisque. Fusce vulputate libero sit amet purus tincidunt vehicula. Nunc pharetra, magna et feugiat dapibus, nulla nisl egestas ipsum, semper blandit nulla odio id libero. Maecenas vitae purus purus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In euismod dignissim malesuada. In ante purus, cursus eu convallis id, auctor a augue. Proin dictum, mauris vitae placerat ullamcorper, leo libero rhoncus sapien, quis tincidunt sem augue eu felis. Curabitur porta magna imperdiet velit auctor non hendrerit arcu congue. Sed quam massa, sollicitudin quis ultricies vel, eleifend nec eros. Aenean et ullamcorper turpis.
+
+Etiam facilisis nibh sit amet velit placerat imperdiet. Donec ultrices urna vel lorem blandit et cursus elit porttitor. Sed ut leo sit amet quam placerat tempus id vitae ante. Etiam id nisi augue. Maecenas ut cursus tortor. Sed vitae purus vitae massa varius dictum. Nulla commodo imperdiet nulla sed tincidunt. Sed laoreet lorem vitae mauris interdum a fringilla neque auctor.
+
+Aenean quis nunc eros. Cras aliquam felis sed ipsum eleifend eu consequat eros faucibus. Mauris quis arcu ut nisl lacinia hendrerit ac eget turpis. Sed placerat nisl id lectus consectetur ut adipiscing augue luctus. Sed ac eros et nulla tempor interdum. Vivamus sed erat mi, id ultricies nisl. Mauris euismod euismod nulla ac ultricies. Vestibulum at orci ac nunc placerat placerat. Nullam condimentum porttitor tortor, a tincidunt nulla tristique sit amet. Sed porta tempus sapien vitae ultrices. Nullam ac rhoncus mauris. Vestibulum nisi lacus, aliquam eu rutrum at, pretium eu lacus. Nulla vestibulum consequat neque eget fringilla. In hac habitasse platea dictumst. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+
+Pellentesque lacus orci, faucibus a hendrerit vitae, lacinia vel mi. Sed ultrices fringilla eros, sit amet venenatis orci dapibus vitae. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ipsum ante, facilisis eget luctus vel, porttitor vitae diam. Etiam venenatis, arcu non posuere porttitor, dui purus facilisis sem, luctus tempor tellus odio vel mauris. Fusce sit amet pellentesque dui. Sed sodales dictum purus ac dictum. Cras lobortis auctor enim, vitae adipiscing justo dignissim nec. Praesent eu elit in dui dictum aliquet vitae in erat. Nulla nulla tortor, condimentum et dapibus nec, ultricies vitae leo.
+
+Mauris pharetra semper quam vel auctor. Proin euismod ornare libero, id aliquet lectus condimentum eget. Integer urna erat, cursus ut porttitor nec, rutrum eget justo. Duis euismod turpis ut libero pellentesque vitae mollis elit ornare. Nulla tellus lectus, aliquet et facilisis eu, adipiscing et mi. Donec gravida mauris eu orci bibendum in interdum tellus facilisis. In dignissim egestas sagittis. Sed diam leo, placerat sed molestie vel, pharetra in sem. Mauris in felis risus. Curabitur tincidunt enim metus. Proin at sagittis mauris. Maecenas lorem arcu, molestie vitae convallis vel, placerat eu est. Aliquam erat volutpat. Cras pellentesque vehicula leo, vitae fringilla enim consequat nec. Suspendisse id justo purus.</p>
+</div>
+<script type="text/javascript">
+$(function(){
+						$('.scroll-pane').jScrollPane();
+						$('.scroll-pane-arrows').jScrollPane(
+						{
+						
+							showArrows: true,
+						
+						}
+						);
+						});	
+</div>
+</body>
+</html>

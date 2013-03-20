@@ -52,8 +52,15 @@
 			oci_bind_by_name($stid3, ':accountnum', $accountnum);
 			//oci_bind_by_name($stid3, ':opeFlag', 0);
 			oci_execute($stid3);
+
+			echo '<script>alert("Account deactivated. You will be logout now.");</script>';
 			
-			header("Location: deactivate.php");
+			
+			unset($_SESSION['loginclient']);
+			unset($_SESSION['client']);
+			session_destroy();
+			header("Location: index.php");
+			exit;
 		}	
 	
 		/****code for edit personal information*****/

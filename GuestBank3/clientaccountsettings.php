@@ -183,7 +183,7 @@
 						$_SESSION['client']->set_lname($lname);
 						$_SESSION['client']->set_mname($mname);
 						
-						echo "<script type='text/javascript'>alert('query successful');</script>";
+						echo "<script type='text/javascript'>alertify.success('Personal information edited.');</script>";
 						oci_commit($sid);
 						oci_close($sid);
 		}
@@ -215,6 +215,10 @@
 		<link type="text/css" href="stylesheets/jquery.jscrollpane.lozenge.css" rel="stylesheet" media="all" />
 		<script type="text/javascript" src="scripts/jquery.jscrollpane.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery.mousewheel.js"></script>
+
+		<link rel="stylesheet" href="stylesheets/alertify.core.css" />
+		<link rel="stylesheet" href="stylesheets/alertify.default.css" />
+		<script src="scripts/alertify.min.js"></script>
 	</head>
 
 	<body>

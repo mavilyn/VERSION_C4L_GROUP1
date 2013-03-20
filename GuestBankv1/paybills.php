@@ -8,6 +8,12 @@
 	
 	global $billeraccountnum;
 	global $amountToBePayed;
+	$refNotFound = false;
+	$pending = false;
+	$alreadyConn = false;
+	$successAdd = false;
+	$sucessPay = false;
+	$insufficent = false;
 	
 	if (isset($_POST['paybills'])) {
 			
@@ -92,13 +98,17 @@
 							$stid = oci_parse($conn, $query);
 							oci_bind_by_name($stid, ':servicenum', $servicenum);
 							oci_execute($stid);
+
+							
+							$sucessPay = true;
+						
 							
 							oci_close($conn);
 								
 						}
 
 						else{
-							echo 'You dont have enough balance';
+							$insufficent = true;
 						}
 				//}
 				
@@ -139,7 +149,7 @@
 						
 						if($numRequest > 0){
 							//UNSUCESSFUL
-							echo "<script>alert('Unsuccessful! Request is already pending.');</script>";
+							$pending = true;
 						}
 						else{
 							
@@ -152,7 +162,7 @@
 							oci_fetch($parsed);
 							
 							if($num_rows > 0){
-								echo "<script>alert('Biller already connected to your account.');</script>";
+								$alreadyConn = true;
 							}
 							else{
 								$accountnum = $_SESSION['client']->get_accountnum();
@@ -165,12 +175,13 @@
 								oci_bind_by_name($compiled, ':billeraccountnum', $_POST['billers']);
 								oci_bind_by_name($compiled, ':refnum', $_POST['refnum']);
 								oci_execute($compiled);
+								$successAdd = true;
 							}
 						}
 						
 					}
 					else{
-						echo "<script>alert('Unsuccessful Request! Reference Number not found.');</script>";
+						$refNotFound = true;
 					}
 	}
 	
@@ -200,6 +211,10 @@
 		<link type="text/css" href="stylesheets/jquery.jscrollpane.lozenge.css" rel="stylesheet" media="all" />
 		<script type="text/javascript" src="scripts/jquery.jscrollpane.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery.mousewheel.js"></script>
+
+		<link rel="stylesheet" href="stylesheets/alertify.core.css" />
+		<link rel="stylesheet" href="stylesheets/alertify.default.css" />
+		<script src="scripts/alertify.min.js"></script>
 		
 	</head>
 
@@ -274,6 +289,38 @@
 						</div>
 						<div class="rule"></div>
 						<div id="pb_maincontent">
+							<?php
+								
+								if($refNotFound == true){
+									echo "<script type='text/javascript'>alertify.error('Unsuccessful Request! Reference Number not found.');</script>";
+									$refNotFound = false;	
+								}
+
+								if($pending == true){
+									echo "<script type='text/javascript'>alertify.error('Unsuccessful Request! Request is already pending.');</script>";
+									$pending= false;	
+								}
+
+								if($alreadyConn == true){
+									echo "<script type='text/javascript'>alertify.error('Unsuccessful Request! You are already connected with this biller.');</script>";
+									$alreadyConn= false;	
+								}
+
+								if($successAdd == true){
+									echo "<script type='text/javascript'>alertify.success('Request to add biller is successful.');</script>";
+									$successAdd= false;	
+								}
+
+								if($sucessPay == true){
+									echo "<script type='text/javascript'>alertify.success('Bill has been paid.');</script>";
+									$successPay= false;	
+								}
+
+								if($insufficent == true){
+									echo "<script type='text/javascript'>alertify.error('You dont have enough balance.');</script>";
+									$insufficent= false;	
+								}
+							?>
 							<form name = "paybill_form" method ="post" action = "#" onSubmit = "return checkpaybill();">
 							
 							<?php

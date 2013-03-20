@@ -2,7 +2,7 @@
 	include("class_lib.php");
 	
 	session_start();
-	
+		$insufficient = false;
 		if (!(isset($_SESSION['loginclient']) && $_SESSION['loginclient'] != '')) {
 		header('Location: destroy.php');
 		}
@@ -33,7 +33,8 @@
 			/***********************************************************************************/
 
 				if($clientbalance < $_POST['amount']){
-					echo "Account balance is not enough.";
+					//echo "Account balance is not enough.";
+					$insufficient = true;
 				}
 				
 				else{
@@ -402,6 +403,11 @@
 								
 									echo "<script type='text/javascript'>alertify.success(Request has been made successfully.');</script>";
 									unset($again);		
+								}
+
+								if($insufficient == true){
+									echo "<script type='text/javascript'>alertify.error('Account balance is insufficient.');</script>";
+									$insufficient = false;	
 								}
 							
 								

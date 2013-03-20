@@ -61,6 +61,10 @@
 		<script type="text/javascript" src="scripts/jquery-1.8.1.min.js"></script>
 		<script src="scripts/jquery.nivo.slider.js" type="text/javascript"></script>
 		<script src="scripts/onlinebank.js" type="text/javascript"></script>
+
+		<link rel="stylesheet" href="stylesheets/alertify.core.css" />
+		<link rel="stylesheet" href="stylesheets/alertify.default.css" />
+		<script src="scripts/alertify.min.js"></script>
 		
 	</head>
 

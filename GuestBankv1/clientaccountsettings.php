@@ -2,10 +2,12 @@
 	include("class_lib.php");
 	
 	session_start();
-	
+	$change = false;
+	$invalid = false;
 		if (!(isset($_SESSION['loginclient']) && $_SESSION['loginclient'] != '')) {
 		header('Location: destroy.php');
 		}
+		$updateInfo = false;
 	
 	/**********************codes for change password******************/
 	
@@ -32,11 +34,11 @@
 						
 						oci_close($connGuest);
 						$_SESSION['client']->set_password(md5(md5($_POST['newpassword'])));
-						echo "You have successfully changed your password.";
-						header("Location: client_home.php");
+						$change = true;
+						//header("Location: client_home.php");
 				}
 				else{
-					echo "Please enter your correct password.";
+					$invalid = true;
 				}
 			}
 	
@@ -52,7 +54,9 @@
 			oci_bind_by_name($stid3, ':accountnum', $accountnum);
 			//oci_bind_by_name($stid3, ':opeFlag', 0);
 			oci_execute($stid3);
-			
+			unset($_SESSION['loginclient']);
+			unset($_SESSION['client']);
+			session_destroy();
 			header("Location: deactivate.php");
 		}	
 	
@@ -176,7 +180,8 @@
 						$_SESSION['client']->set_lname($lname);
 						$_SESSION['client']->set_mname($mname);
 						
-						echo "<script type='text/javascript'>alert('query successful');</script>";
+						$updateInfo = true;
+
 						oci_commit($conn);
 						oci_close($conn);
 		}
@@ -208,6 +213,10 @@
 		<link type="text/css" href="stylesheets/jquery.jscrollpane.lozenge.css" rel="stylesheet" media="all" />
 		<script type="text/javascript" src="scripts/jquery.jscrollpane.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery.mousewheel.js"></script>
+
+		<link rel="stylesheet" href="stylesheets/alertify.core.css" />
+		<link rel="stylesheet" href="stylesheets/alertify.default.css" />
+		<script src="scripts/alertify.min.js"></script>
 	</head>
 
 	<body>
@@ -280,6 +289,26 @@
 						</div>
 						<div class="rule"></div>		
 							<div id="epi_maincontent">
+								<?php 
+								
+								if($updateInfo == true){
+									echo "<script type='text/javascript'>alertify.success('Personal information changes saved.');</script>";
+									$updateInfo = false;		
+								}
+
+								if($change == true){
+									echo "<script type='text/javascript'>alertify.success('You have successfully changed your password.');</script>";
+									$change = false;
+
+								}
+
+								if($invalid == true){
+									echo "<script type='text/javascript'>alertify.error('Please enter your correct password.');</script>";
+									$invalid = false;		
+								}
+
+								
+								?>
 							<div class="scroll-pane-arrows5">
 							<form name = "update_personal" method ="post" action = "clientaccountsettings.php" onSubmit="return checkUpdatePersonal();">
 			  <!----> 

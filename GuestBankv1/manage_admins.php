@@ -2,6 +2,12 @@
 	include("class_lib.php");
 	session_start();
 	
+	$sameUname = false;
+	$alreadyReg = false;
+	$successfulAdd = false;
+	$invalid = false;
+	$removeSuccess = false;
+	$removeFailure = false;
 	if (!(isset($_SESSION['loginadmin']) && $_SESSION['loginadmin'] != '')) {
 		header('Location: destroy.php');
 	}
@@ -31,7 +37,7 @@
 				oci_close($connGuest);
 			/******************************************************/
 			if($num_rows > 0) {
-				echo '<script type=text/javascript>alert("Employee already has an online account!");</script>';
+				$alreadyReg = true;
 			}
 			
 			else{
@@ -68,7 +74,7 @@
 							oci_fetch($stid);
 							$connMain = oci_connect("mainbank", "kayato1");
 								if($num_rows3>0){
-									echo "Username already exists.";	
+									$sameUname = true;	
 								}
 								
 								else{
@@ -116,7 +122,7 @@
 									oci_bind_by_name($stid4, ':branchcode', $branchcode);
 									oci_execute($stid4);
 									
-									echo '<script type=text/javascript>alert("Administrator has been successfully added! ");</script>';
+									$successfulAdd = true;
 									
 								}
 						oci_close($connGuest);
@@ -125,8 +131,7 @@
 			}
 				
 				else{
-					echo '<script type=text/javascript>alert("Employee number does not exist!");</script>';
-					$valid = false;
+					$invalid = true;
 				}
 			}
 			
@@ -199,11 +204,11 @@
 									oci_execute($stmt3);
 									
 									oci_close($connGuest);
+									$removeSuccess = true;
 									
-									echo"<script>alert('Administrator account has been successfully removed.');return false;</script>";
 								}
 								else{
-									echo "<script>alert('Employee number not found.');</script>";
+									$removeFailure = true;
 								}
 		}
 	
@@ -230,6 +235,10 @@
 		<script src="scripts/jquery.nivo.slider.js" type="text/javascript"></script>
 		<script src="scripts/onlinebank.js" type="text/javascript"></script>
 		
+		<link rel="stylesheet" href="stylesheets/alertify.core.css" />
+		<link rel="stylesheet" href="stylesheets/alertify.default.css" />
+		<script src="scripts/alertify.min.js"></script>
+
 	</head>
 
 	<body>
@@ -301,6 +310,33 @@
 						</div>
 						<div class="rule2"></div>
 						<div id="add_maincontent">
+							<?php
+							if($sameUname == true){
+									echo "<script type='text/javascript'>alertify.error('Username already exist. Please choose another username.');</script>";
+									$sameUname = false;		
+								}
+								if($alreadyReg == true){
+									echo "<script type='text/javascript'>alertify.error('Employee is already registered in the Guestbank Online Solutions!');</script>";
+									$alreadyReg = false;		
+								}
+								if($successfulAdd == true){
+									echo "<script type='text/javascript'>alertify.success('Employee is successfully added.');</script>";
+									$successfulAdd= false;
+								}
+								if($invalid == true){
+									echo "<script type='text/javascript'>alertify.error('Employee not found.');</script>";
+									$invalid= false;
+								}
+								if($removeSuccess == true){
+									echo "<script type='text/javascript'>alertify.success('Administrator account has been successfully removed.');</script>";
+									$removeSuccess= false;
+								}
+								if($removeFailure == true){
+									echo "<script type='text/javascript'>alertify.error('Employee number not found.');</script>";
+									$removeFailure= false;
+								}
+							
+						?>
 							<form name = "addadmin_form" method ="post" action = "manage_admins.php" onsubmit="return check_addAdmin();">
 								
 								<label for="empid">Employee Number: </label>

@@ -3,6 +3,10 @@
 	
 	session_start();
 	
+	$alreadyExist = false;
+	$successfulAdd = false;
+	$notExist = false;
+
 	if (!(isset($_SESSION['loginadmin']) && $_SESSION['loginadmin'] != '')) {
 		header('Location: destroy.php');
 		}
@@ -18,11 +22,11 @@
 		
 		if (!$good) {
 			$e = oci_error($parsedQuery);  // For oci_parse errors pass the connection handle
+			$alreadyExist = true;
 			
-			echo "<script type='text/javascript'>alert('Biller already exists.');</script>";
 		}
 		else{
-			echo "<script type='text/javascript'>alert('Biller successfully added.');</script>";
+				$successfulAdd = true;
 		}
 		oci_commit($conn);
 		oci_free_statement($parsedQuery);
@@ -63,7 +67,8 @@
 			}
 		}
 		if(!$exists)
-			echo "<script type='text/javascript'>alert('Account does not exist.');</script>";
+			$notExist = true;
+			
 	
 		oci_free_statement($parsedQuery);
 		oci_close($conn);
@@ -93,6 +98,10 @@
 		<link type="text/css" href="stylesheets/jquery.jscrollpane.lozenge.css" rel="stylesheet" media="all" />
 		<script type="text/javascript" src="scripts/jquery.jscrollpane.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery.mousewheel.js"></script>
+
+		<link rel="stylesheet" href="stylesheets/alertify.core.css" />
+		<link rel="stylesheet" href="stylesheets/alertify.default.css" />
+		<script src="scripts/alertify.min.js"></script>
 		
 	</head>
 
@@ -159,6 +168,23 @@
 						</div>
 						<div class="rule"></div>
 						<div id="billers_maincontent">
+							<?php 
+								if($alreadyExist == true){
+									echo "<script type='text/javascript'>alertify.error('Biller already exists.');</script>";
+									$alreadyExist = false;		
+								}
+
+								if($successfulAdd == true){
+									echo "<script type='text/javascript'>alertify.success('Biller successfully added.');</script>";
+									$alreadyExist = false;		
+								}
+
+								if($notExist == true){
+									echo "<script type='text/javascript'>alertify.error('Account does not exist.');</script>";
+									$notExist= false;		
+								}
+							
+							?>
 							<form name="modify_biller_list" action=# method="POST">
 								<div class="scroll-pane-arrows">
 								

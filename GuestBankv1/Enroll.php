@@ -1,6 +1,9 @@
 <?php
 		include("class_lib.php");
 		session_start();
+		$incorrectPin = false;
+		$sameUname = false;
+		$alreadyReg = false;
 		
 		if(isset($_SESSION['client']))
 		header("Location: client_home.php");
@@ -74,7 +77,7 @@
 			/******************************************************************/
 
 			if($num_rows > 0) {		//if already enrolled
-				echo '<script type=text/javascript>alert("Account number is already registered in the Guestbank Online Solutions!");return false;</script>';
+				$alreadyReg = true;
 			}
 			
 			else{		//if can enroll
@@ -107,7 +110,7 @@
 							/******************************************************************/
 
 						if($num_rows3>0){
-							echo "<script>alert('Username already exist. Please choose another username.');</script>";
+							$sameUname = true;
 						}
 						else{		//VALID Enrollment, insert in the database 
 							$birthday = $_POST['month']."/".$_POST['day']."/".$_POST['year'];
@@ -174,7 +177,7 @@
 						}
 				}
 				else{
-					echo '<script type=text/javascript>alert("Incorrect account number or pin!");return false;</script>';
+					$incorrectPin = true;
 				}
 			}
 		}
@@ -210,6 +213,10 @@
 		<link href="Keyboard/css/keyboard.css" rel="stylesheet">
 		<script src="Keyboard/js/jquery.keyboard.js"></script>
 		<script src="Keyboard/js/jquery.keyboard.extension-typing.js"></script>
+
+		<link rel="stylesheet" href="stylesheets/alertify.core.css" />
+		<link rel="stylesheet" href="stylesheets/alertify.default.css" />
+		<script src="scripts/alertify.min.js"></script>
 	
 		<!-- modal css & script -->
 		<script src="scripts/jquery.simplemodal.js"></script>
@@ -305,8 +312,21 @@
 			</div>
 			
 			<div id="form_wrapper">
-			
+			<?php
+				if($incorrectPin == true){
+						echo "<script type='text/javascript'>alertify.error('Incorrect account number or pin!');</script>";
+						$incorrectPin = false;		
+					}
+				if($sameUname == true){
+						echo "<script type='text/javascript'>alertify.error('Username already exist. Please choose another username.');</script>";
+						$sameUname = false;		
+					}
+					if($alreadyReg == true){
+						echo "<script type='text/javascript'>alertify.error('Account number is already registered in the Guestbank Online Solutions!');</script>";
+						$alreadyReg = false;		
+					}
 				
+			?>
 				<form name = "enroll_form" method ="post" action = "Enroll.php" onSubmit="return checkEnroll();">
 				
 				<h1 class="form_section_header"> Bank Account Information</h1>

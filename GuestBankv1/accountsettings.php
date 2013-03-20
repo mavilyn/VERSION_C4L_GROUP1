@@ -1,7 +1,8 @@
 <?php
 	include("class_lib.php");
 	session_start();
-			
+		$change = false;	
+		$invalid = false;
 		if (!(isset($_SESSION['loginadmin']) && $_SESSION['loginadmin'] != '')) {
 		header('Location: destroy.php');
 		}
@@ -26,13 +27,14 @@
 						oci_bind_by_name($stid4, ':password', $newpassword);
 						oci_execute($stid4);
 						oci_close($connGuest2);
-						
+						$change = true;
 						$_SESSION['admin']->set_password(md5(md5($_POST['newpassword'])));
-						echo "You have successfully changed your password.";
+						//echo "You have successfully changed your password.";
 						//header("Location: admin_home.php");
 				}
 				else{
-					echo "<script type='text/javascript'>alert('Please enter your correct password.');</script>";
+				//	echo "<script type='text/javascript'>alert('Please enter your correct password.');</script>";
+						$invalid = true;
 				}
 			}
 			
@@ -131,6 +133,19 @@
 						</div>
 						<div class="rule2"></div>
 						<div id="billers_maincontent">
+							<?php 
+								if($change == true){
+									echo "<script type='text/javascript'>alertify.success('You have successfully changed your password.');</script>";
+									$change = false;
+
+								}
+
+								if($invalid == true){
+									echo "<script type='text/javascript'>alertify.error('Please enter your correct password.');</script>";
+									$invalid = false;		
+								}
+
+							?>
 							<div id="cp_form_area">
 							<form name = "change_password_form" method ="post" action = "accountsettings.php" onsubmit="return checkChangePassword();">
 								
